@@ -25,6 +25,14 @@ import {
 import { Input } from '@/components/ui/input'
 
 import { AnimatePresence, motion } from 'framer-motion'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from '@/components/ui/select'
+import { Terminal } from 'lucide-react'
 
 const FormSchema = z.object({
   commandName: z.string().min(1, {
@@ -32,6 +40,9 @@ const FormSchema = z.object({
   }),
   commandCode: z.string().min(1, {
     message: 'El código del comando es requerido'
+  }),
+  device: z.string().min(1, {
+    message: 'El dispositivo es requerido'
   })
 })
 
@@ -39,7 +50,9 @@ export default function CreateCommand() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      commandName: ''
+      commandName: '',
+      commandCode: '',
+      device: ''
     }
   })
 
@@ -86,12 +99,60 @@ export default function CreateCommand() {
                 >
                   <FormField
                     control={form.control}
+                    name='device'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Dispositivo</FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder='Seleccione el dispositivo' />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value='id21321'>
+                              Mackbook Air de Yamir
+                            </SelectItem>
+                            <SelectItem value='id217362781'>
+                              PC-Station
+                            </SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            <AnimatePresence>
+              {form.watch('device') && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <FormField
+                    control={form.control}
                     name='commandCode'
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Comando</FormLabel>
                         <FormControl>
-                          <Input placeholder='open calculator.exe' {...field} />
+                          <div className='relative'>
+                            <Terminal className='absolute text-muted-foreground size-4 left-3 top-1/2 -translate-y-1/2' />
+
+                            <Input
+                              placeholder='open calculator.exe'
+                              className='pl-8'
+                              {...field}
+                            />
+                          </div>
                         </FormControl>
                         <FormDescription>
                           Este es el código que se ejecutará cuando se invoque
@@ -105,7 +166,9 @@ export default function CreateCommand() {
               )}
             </AnimatePresence>
 
-            <Button type='submit'>Submit</Button>
+            <div className='flex w-full justify-end'>
+              <Button type='submit'>Crear comando</Button>
+            </div>
           </form>
         </Form>
       </CardContent>
