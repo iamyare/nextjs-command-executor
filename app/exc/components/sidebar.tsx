@@ -14,12 +14,14 @@ import {
   LogOut,
   MenuIcon,
   MonitorSmartphone,
+  SquareTerminal,
   Terminal,
   X
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import LogoSidebar from './logo-sidebar'
+import { Titles } from '@/lib/data'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -31,9 +33,10 @@ const userNavigation = [
 ]
 
 const navigation = [
-  { name: 'Dashboard', href: '/dashboard', icon: MonitorSmartphone },
-  { name: 'Dispositivos', href: '/devices', icon: Gauge },
-  { name: 'Historial', href: '/history', icon: History }
+  { name: 'Dashboard', href: '/exc', icon: Gauge },
+  { name: 'Dispositivos', href: '/exc/devices', icon: MonitorSmartphone },
+  { name: 'Historial', href: '/exc/history', icon: History },
+  { name: 'Comandos', href: '/exc/commands', icon: SquareTerminal }
 ]
 
 const history = [
@@ -126,7 +129,21 @@ export default function Sidebar({
                 <div
                   className={cn('flex w-full items-center justify-end sm:order-3 sm:justify-between sm:gap-x-3', isOpen ? 'md:ms-64' : 'md:ms-20')}
                 >
-                  <h2 className='hidden md:block'>Dashboard</h2>
+                  <h2 className='hidden md:flex items-center space-x-2 text-lg'>
+                    {
+                      (() => {
+                        const label = Titles.find((item) => item.href === pathname)
+                        return label && (
+                          <>
+                                                    <label.icon className='h-5 w-5' />
+                          <span>{label.label}</span>
+                        
+                          </>
+                        )
+
+})()
+                    }
+                  </h2>
 
                   {/* Botones */}
                   <div className='flex flex-row items-center justify-end gap-2 '>

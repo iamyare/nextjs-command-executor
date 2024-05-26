@@ -1,0 +1,39 @@
+'use server'
+import { supabase } from '@/lib/supabase'
+import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { unstable_noStore as noStore } from 'next/cache'
+
+export async function readUserSession () {
+    noStore()
+    const supabase = await createSupabaseServerClient()
+    return await supabase.auth.getSession()
+  }
+  
+  export async function signOut () {
+    const supabase = await createSupabaseServerClient()
+    return await supabase.auth.signOut()
+  }
+  
+  export async function getUser () {
+    const supabase = await createSupabaseServerClient()
+    return await supabase.auth.getUser()
+  }
+
+  export async function SelectCommand ({userId}:{userId:string}) {
+    const {data:commands, error:commandsError} = await supabase
+    .from('commands')
+    .select('*')
+    .eq('user_id', userId)
+
+    return {commands, commandsError}
+  }
+
+
+    export async function InsertCommand ({data}:{data: CommandInsert}) {
+        const {data:commandInsertResult, error:commandInsertError} = await supabase
+        .from('commands')
+        .insert({...data})
+
+        return {commandInsertResult, commandInsertError}
+    }
+
