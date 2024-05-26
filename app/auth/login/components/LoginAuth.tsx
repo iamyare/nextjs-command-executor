@@ -1,7 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { UserAuthForm } from './user-auth-form'
-import YAREDev from '@/components/Logo-YARE-dev'
+import {YAREDev} from '@/components/Logo-YARE-dev'
 
 export default function LoginAuth() {
   return (

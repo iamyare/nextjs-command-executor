@@ -30,14 +30,14 @@ export function CreateCommandModal({title, description}: {title: string, descrip
 
   if (isDesktop) {
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
+      <Dialog  open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
         <Button variant={'outline'} type='submit'>
           <Plus className='size-4 mr-2' />
           Crear comando
         </Button>
         </DialogTrigger>
-        <DialogContent className=' max-w-lg'>
+        <DialogContent className=' max-w-lg '>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>

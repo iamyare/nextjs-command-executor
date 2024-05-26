@@ -23,6 +23,7 @@ import { Separator } from '@/components/ui/separator'
 import LogoSidebar from './logo-sidebar'
 import { Titles } from '@/lib/data'
 import { signOut } from '@/actions'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -123,7 +124,7 @@ export default function Sidebar({
                 className='mx-auto flex w-full basis-full items-center px-4 sm:px-6 md:px-8'
                 aria-label='Global'
               >
-                <div className=' me-5 md:hidden lg:me-0 lg:hidden'>
+                <div className=' me-5 md:hidden lg:me-0 lg:hidden '>
                 <LogoSidebar isOpen={isOpen} />
                 </div>
 
@@ -148,7 +149,7 @@ export default function Sidebar({
 
                   {/* Botones */}
                   <div className='flex flex-row items-center justify-end gap-2 '>
-                    {/* <ModeToggle /> */}
+                  <ThemeToggle />
 
                     {/* Profile dropdown */}
                     <Menu as='div' className='relative '>
@@ -156,8 +157,10 @@ export default function Sidebar({
                         <span className='absolute -inset-1.5' />
                         <span className='sr-only'>Abrir Menu</span>
                         <Avatar className='h-9 w-9'>
-                          <AvatarImage src={''} />
-                          <AvatarFallback>YR</AvatarFallback>
+                          <AvatarImage src={user.avatar_url ?? ''} />
+                          <AvatarFallback>
+                            {user.full_name.charAt(0).toUpperCase()}
+                          </AvatarFallback>
                         </Avatar>
                         {/* <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" /> */}
                       </Menu.Button>
@@ -176,12 +179,14 @@ export default function Sidebar({
                               <div className='w-full pointer-events-none'>
                                 <div className='flex items-center gap-2 p-1'>
                                   <Avatar>
-                                    <AvatarImage src={''} />
-                                    <AvatarFallback>YR</AvatarFallback>
+                                    <AvatarImage src={user.avatar_url ?? ''} />
+                                    <AvatarFallback>
+                                      {user.full_name.charAt(0).toUpperCase()}
+                                    </AvatarFallback>
                                   </Avatar>
                                   <div className='w-full  overflow-hidden'>
                                     <p className='text-sm font-semibold truncate w-full '>
-                                      Yamir Alejandro Rodas Elvir
+                                      {user.full_name}
                                     </p>
                                     <p className='text-xs truncate w-full  text-neutral-500'>
                                       {user.email}
@@ -261,7 +266,7 @@ export default function Sidebar({
               </Button>
 
               <section className='h-full space-y-4'>
-                <aside className=' w-full'>
+                <aside className=' w-full -mt-4 mb-4'>
                 <LogoSidebar isOpen={isOpen} />
                 </aside>
 
@@ -348,11 +353,14 @@ export default function Sidebar({
       </Disclosure>
 
       <main
-        className={`w-full 
+        className={`w-full
         ${isOpen ? ' md:ps-64' : ' md:ps-20'}
         `}
       >
         <section className='p-3'>{children}</section>
+        <div className="absolute top-0 left-0 inset-0 z-[-4] h-full w-full bg-dot"></div>
+        <div className="absolute left-0 top-0 z-[-2] w-full h-full bg-resplandor_1"></div>
+      
       </main>
     </>
   )

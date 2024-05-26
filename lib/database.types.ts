@@ -123,7 +123,7 @@ export type Database = {
           avatar_url: string | null
           created_at: string
           email: string
-          full_name: string | null
+          full_name: string 
           id: string
         }
         Insert: {

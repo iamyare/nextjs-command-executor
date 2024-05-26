@@ -26,6 +26,8 @@
       --input: 214.3 31.8% 91.4%;
       --ring: 221.2 83.2% 53.3%;
       --radius: 0.5rem;
+
+      --bg-opacity: 0.1;
     }
   
     .dark {
@@ -75,3 +77,55 @@
     background: url('../public/assets/img/background_noisy.webp');
   }
   
+  .bg-dot{
+    background-image: linear-gradient(to right, hsl(var(--foreground) / var(--bg-opacity)) 1px, transparent 1px), linear-gradient(to bottom, hsl(var(--foreground) / var(--bg-opacity)) 1px, transparent 1px);
+    background-size: 6rem 6rem;
+    mask-image: radial-gradient(circle at center, black , transparent 70%);
+    mask-size: cover;
+  }
+.bg-resplandor_1{
+  background-image: radial-gradient(ellipse 80% 80% at 50% -30%,rgba(33, 136, 177, 0.3),rgba(255,255,255,0));
+}
+
+.gradient-experience__1 {
+  will-change: transform;
+  background-image: linear-gradient(180deg, rgba(33, 136, 177, 0.3), rgba(84, 182, 221, 0.3));
+}
+
+/* animacion de borde, luz reccore borde */
+/* className={cn(
+  "fixed left-[50%] top-[50%] border-glow z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border bg-background/20 p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%] sm:rounded-lg",
+  className
+)} */
+
+:root {
+	--d: 2500ms;
+	--angle: 90deg;
+	--gradX: 100%;
+	--gradY: 50%;
+	--c1: rgba(168, 239, 255, 1);
+	--c2: rgba(168, 239, 255, 0.1);
+}
+
+@property --angle {
+  syntax: '<angle>';
+  initial-value: 90deg;
+  inherits: true;
+}
+
+@property --gradX {
+  syntax: '<percentage>';
+  initial-value: 50%;
+  inherits: true;
+}
+
+@property --gradY {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: true;
+}
+
+
+.shadow-inner-white {
+  box-shadow: inset 0 0 50px rgba(255, 255, 255, 0.02);
+}

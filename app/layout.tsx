@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import './globals.css'
 import { cn } from '@/lib/utils'
 import { Toaster } from "@/components/ui/toaster"
+import { ThemeProvider } from '@/components/theme-provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -20,9 +21,16 @@ export default function RootLayout({
   return (
     <html lang='en' className='dark'>
       <body className={cn('antialiased', inter.className) }>
+      <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
       <div id='noisy'></div>
        {children}
         <Toaster />
+      </ThemeProvider>
       </body>
     </html>
   )
