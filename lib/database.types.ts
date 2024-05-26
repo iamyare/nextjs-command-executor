@@ -127,14 +127,22 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
-          id?: string
+          id: string
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "users_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
