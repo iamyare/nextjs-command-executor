@@ -102,7 +102,7 @@ export default function Sidebar({
   defaultOpen = true
 }: {
   children: React.ReactNode
-  user: null
+  user: User 
   defaultOpen?: boolean
 }) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen)

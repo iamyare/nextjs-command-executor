@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { Icons } from '@/components/icons'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -9,14 +9,13 @@ import { Label } from '@/components/ui/label'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import { toast } from 'react-toastify'
+
 import { useTransition } from 'react'
-import { signInWithEmailAndPassword } from '@/app/actions'
-import { renameError } from '@/app/actions/client'
-import Toast from '@/components/ui/toast'
-import { FacebookButton, GitHubButton, GoogleButton } from '@/components/oauth-buttons'
+
 import Link from 'next/link'
 import { Checkbox } from '@/components/ui/checkbox'
+import { FacebookButton, GitHubButton, GoogleButton } from '@/components/oauth-buttons'
+import { Icons } from '@/components/icons'
 
 const validationSchema = z.object({
   email: z
@@ -53,10 +52,7 @@ export function UserAuthForm () {
 
   function onSubmit (data: z.infer<typeof validationSchema>) {
     startTransition(async () => {
-      const { error } = await signInWithEmailAndPassword(data)
-      if (error) {
-        toast.error(renameError(error))
-      }
+      console.log(data)
     })
   }
 
@@ -142,7 +138,6 @@ export function UserAuthForm () {
           </div>
         </form>
       </div>
-      <Toast />
     </>
   )
 }
