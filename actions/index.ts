@@ -46,19 +46,17 @@ export async function readUserSession () {
         return { commandError}
     }
 
-    //Obtener usuario con la sesion activa
-    export async function getUserSession () {
-        const {data, error} = await getUser()
-      if (error) {
+export async function getUserSession () {
+    const {data, error} = await getUser()
+    if (error) {
         return {user: null, error}
-      }
-
-      const {data:user, error:userError} = await supabase
-      .from('users')
-      .select('*')
-      .eq('id', data.user.id)
-      .single()
-
-      return {user: user, error: userError}
-
     }
+
+    const {data:user, error:userError} = await supabase
+    .from('users')
+    .select('*')
+    .eq('id', data.user.id)
+    .single()
+
+    return {user: user, error: userError}
+}

@@ -11,6 +11,8 @@ export default async function layout({ children }: { children: React.ReactNode }
       : true
 
       const {user, error} = await getUserSession()
+
+
       if (error) {
         console.log(error)
       }

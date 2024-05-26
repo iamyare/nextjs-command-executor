@@ -22,6 +22,7 @@ import { cn } from '@/lib/utils'
 import { Separator } from '@/components/ui/separator'
 import LogoSidebar from './logo-sidebar'
 import { Titles } from '@/lib/data'
+import { signOut } from '@/actions'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -183,14 +184,14 @@ export default function Sidebar({
                                       Yamir Alejandro Rodas Elvir
                                     </p>
                                     <p className='text-xs truncate w-full  text-neutral-500'>
-                                      correo@gmail.com
+                                      {user.email}
                                     </p>
                                   </div>
                                 </div>
                               </div>
                             </Menu.Item>
                             <hr className='my-1 -mx-1' />
-                            <hr className='my-1 mx-2 ' />
+
                             {userNavigation.map((item) => (
                               <Link
                                 href={item.href}
@@ -214,7 +215,7 @@ export default function Sidebar({
                                     'relative flex justify-start select-none hover:bg-red-500/10 hover:text-red-500 items-center rounded-sm px-3 py-1.5  w-full outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
                                   )}
                                   onClick={async () => {
-                                    // await signOut()
+                                    await signOut()
                                     router.push('/')
                                   }}
                                 >
