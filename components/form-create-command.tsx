@@ -32,6 +32,7 @@ import { useTransition } from 'react'
 import { toast } from '@/components/ui/use-toast'
 import { InsertCommand } from '@/actions'
 import { cn } from '@/lib/utils'
+import { useRouter } from 'next/navigation'
 
 const FormSchema = z.object({
   name: z.string().min(1, {
@@ -51,6 +52,7 @@ const FormSchema = z.object({
 export default function FormCreateCommand({className}: {className?: string}) {
 
     const [isPeding, startTransition] = useTransition()
+    const router = useRouter()
 
     const form = useForm<z.infer<typeof FormSchema>>({
       resolver: zodResolver(FormSchema),
@@ -76,6 +78,7 @@ export default function FormCreateCommand({className}: {className?: string}) {
         }
   
         form.reset()
+        router.refresh()
         toast({
           variant: "default",
           title: "Command created",

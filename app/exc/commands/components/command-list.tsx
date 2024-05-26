@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Play } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -35,6 +35,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { ExecuteCommand } from "@/actions"
+import { toast } from "@/components/ui/use-toast"
 
 const data: Payment[] = [
   {
@@ -118,7 +120,7 @@ export const columns: ColumnDef<Command>[] = [
     accessorKey: "command",
     header: () => <div className=" ">Comando</div>,
     cell: ({ row }) => {
-      return <div className="max-w-[200px]  md:max-w-[400px] lg:max-w-[500px] overflow-hidden truncate">{row.getValue("command")} Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aut consequatur, maxime reiciendis repellendus totam reprehenderit facilis exercitationem expedita accusantium nemo esse molestias magni ipsa adipisci aliquid sit magnam a impedit?</div>
+      return <div className="max-w-[200px]  md:max-w-[400px] lg:max-w-[500px] overflow-hidden truncate">{row.getValue("command")}</div>
     },
   },
   {
@@ -140,6 +142,42 @@ export const columns: ColumnDef<Command>[] = [
       }).format(new Date(row.getValue("created_at")))
 
       return <div className="text-right font-medium">{formatted}</div>
+    },
+  },
+  {
+    id: "execute",
+    enableHiding: false,
+    cell: ({ row }) => {
+
+      function executeCommand() {
+
+        React.startTransition(async() => {
+          const {commandError} = await ExecuteCommand({
+            commandId: row.original.id,
+            userId: 'f19615b5-82cf-4b41-a8c1-d8f4b284bdb7'
+          })
+          if (commandError) {
+             toast({
+              variant: "destructive",
+              title: "Uh oh! Something went wrong.",
+              description: "There was a problem with your request.",
+            })
+            return undefined
+          }
+          toast({
+            variant: "default",
+            title: "Command executed",
+            description: `The command ${row.original.name} has been executed.`,
+          })
+        })
+      }
+
+      return (
+        <Button variant="ghost" className="p-0 aspect-square rounded-full" onClick={executeCommand}>
+          <span className="sr-only">Ejecutar Comando</span>
+          <Play className="h-4 w-4" />
+        </Button>
+      )
     },
   },
   {
@@ -175,6 +213,7 @@ export const columns: ColumnDef<Command>[] = [
 
 export function CommandList({data}:{data: Command[] | null}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [isPeding, startTransition] = React.useTransition()
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   )
@@ -205,10 +244,10 @@ export function CommandList({data}:{data: Command[] | null}) {
     <div className="w-full">
       <div className="flex items-center py-4">
         <Input
-          placeholder="Filter emails..."
-          value={(table.getColumn("email")?.getFilterValue() as string) ?? ""}
+          placeholder="Filter Nombre..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("email")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />

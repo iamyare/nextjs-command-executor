@@ -37,3 +37,11 @@ export async function readUserSession () {
         return {commandInsertResult, commandInsertError}
     }
 
+    export async function ExecuteCommand ({commandId, userId}:{commandId:string, userId:string}) {
+        const { error:commandError} = await supabase
+        .from('command_history')
+        .insert({command_id: commandId, user_id: userId})
+
+
+        return { commandError}
+    }
