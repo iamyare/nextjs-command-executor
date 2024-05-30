@@ -49,7 +49,7 @@ const FormSchema = z.object({
   })
 })
 
-export default function FormCreateCommand({className}: {className?: string}) {
+export default function FormCreateCommand({userId, className}: {userId: string ,className?: string}) {
 
     const [isPeding, startTransition] = useTransition()
     const router = useRouter()
@@ -60,7 +60,7 @@ export default function FormCreateCommand({className}: {className?: string}) {
         name: '',
         command: '',
         device: '',
-        user_id: 'f19615b5-82cf-4b41-a8c1-d8f4b284bdb7'
+        user_id: userId
       }
     })
   

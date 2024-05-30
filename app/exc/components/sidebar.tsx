@@ -101,11 +101,13 @@ export function HiddenMenu() {
 export default function Sidebar({
   children,
   user,
-  defaultOpen = true
+  defaultOpen = true,
+  lastCommands
 }: {
   children: React.ReactNode
   user: User 
-  defaultOpen?: boolean
+  defaultOpen?: boolean,
+  lastCommands: (CommandHistory & {command: Command})[]
 }) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen)
   const router = useRouter()
@@ -302,15 +304,15 @@ export default function Sidebar({
                       <h3 className='text-sm'>Comandos Recientes</h3>
                       <ul className='mt-2'>
                         {
-                          history.map((item) => (
-                            <li key={item.name}>
+                          lastCommands.map((item) => (
+                            <li key={item.id}>
                               <Button
                                 variant={'ghost'}
                                 className='w-full justify-start text-muted-foreground hover:bg-transparent font-normal'
                               >
                                 <Link href='/history' className='flex items-center'>
                                   <Terminal className='h-5 w-5' />
-                                  <span className='ml-2'>{item.name}</span>
+                                  <span className='ml-2'>{item.command.name}</span>
                                 </Link>
                               </Button>
                             </li>

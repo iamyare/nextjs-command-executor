@@ -1,14 +1,22 @@
-import { SelectCommand } from '../../../actions'
+import { getUserSession, SelectCommand } from '../../../actions'
 import { CommandList } from './components/command-list'
 import { CreateCommandModal } from './components/modal-create'
 
 export default async function CommandsPage() {
+  const {user, error} = await getUserSession()
+
+  if (error || !user) {
+    return console.log(error)
+  }
+
   const { commands, commandsError } = await SelectCommand({
-    userId: 'f19615b5-82cf-4b41-a8c1-d8f4b284bdb7'
+    userId: user.id
   })
 
+
+
   if (commandsError || !commands) {
-    console.log(commandsError)
+    return console.log(commandsError)
   }
   return (
     <main className=''>
@@ -17,6 +25,7 @@ export default async function CommandsPage() {
         <CreateCommandModal
           title={'Crear comando'}
           description='Crea un nuevo comando para ejecutar en tus dispositivos.'
+          userId={user.id}
         />
       </section>
       <CommandList data={commands} />

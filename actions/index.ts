@@ -46,6 +46,38 @@ export async function readUserSession () {
         return { commandError}
     }
 
+    export async function getHistoryCommands ({userId}:{userId:string}) {
+        const {data:commands, error:commandsError} = await supabase
+        .from('command_history')
+        .select('*, command:commands!inner(*)')
+        .eq('user_id', userId)
+
+        // Agregar el nombre del comando en la raiz del objeto
+      const commandsWithCommandName = commands?.map((command) => {
+        return {
+          ...command,
+          commandName: command.command.name
+        }
+      }
+      )
+
+
+        return {commands: commandsWithCommandName, commandsError}
+    }
+
+    //obtener los 5 ultimos comandos ejecutados
+    export async function getLastCommands ({userId}:{userId:string}) {
+        const {data:commands, error:commandsError} = await supabase
+        .from('command_history')
+        .select('*, command:commands!inner(*)')
+        .eq('user_id', userId)
+        .order('created_at', {ascending: false})
+        .limit(5)
+
+        return {commands, commandsError}
+    }
+
+
 export async function getUserSession () {
     const {data, error} = await getUser()
     if (error) {

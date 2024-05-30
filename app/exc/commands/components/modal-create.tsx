@@ -13,10 +13,8 @@ import {
 } from '@/components/ui/dialog'
 import {
   Drawer,
-  DrawerClose,
   DrawerContent,
   DrawerDescription,
-  DrawerFooter,
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger
@@ -24,7 +22,7 @@ import {
 import {  Plus } from 'lucide-react'
 import FormCreateCommand from '@/components/form-create-command'
 
-export function CreateCommandModal({title, description}: {title: string, description: string}) {
+export function CreateCommandModal({userId, title, description}: {userId: string, title: string, description: string}) {
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery('(min-width: 600px)')
 
@@ -44,7 +42,7 @@ export function CreateCommandModal({title, description}: {title: string, descrip
                 {description}
             </DialogDescription>
           </DialogHeader>
-        <FormCreateCommand/>
+        <FormCreateCommand userId={userId}/>
         </DialogContent>
       </Dialog>
     )
@@ -67,7 +65,7 @@ export function CreateCommandModal({title, description}: {title: string, descrip
             {description}
           </DrawerDescription>
         </DrawerHeader>
-        <FormCreateCommand className=' px-4 pb-5'/>
+        <FormCreateCommand className=' px-4 pb-5' userId={userId}/>
 
       </DrawerContent>
     </Drawer>

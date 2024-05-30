@@ -11,8 +11,7 @@ import {
 } from '@/components/ui/card'
 
 
-export default function CreateCommand() {
-
+export default function CreateCommand({userId}: {userId: string}) {
 
   return (
     <Card className=' bg-background/20'>
@@ -24,7 +23,7 @@ export default function CreateCommand() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-      <FormCreateCommand/>
+      <FormCreateCommand userId={userId}/>
       </CardContent>
     </Card>
   )

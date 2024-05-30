@@ -1,7 +1,7 @@
 import React from 'react'
 import Sidebar from './components/sidebar'
 import { cookies } from 'next/headers'
-import { getUserSession } from '@/actions'
+import { getLastCommands, getUserSession } from '@/actions'
 
 export default async function layout({ children }: { children: React.ReactNode }) {
   const sidebarIsOpen = cookies().get('sidebarIsOpen')
@@ -20,10 +20,15 @@ export default async function layout({ children }: { children: React.ReactNode }
         return null
       }
 
+      const {commands, commandsError} = await getLastCommands({userId: user.id})
+      if (commandsError || !commands) {
+        console.log(commandsError)
+      }
+
 
   return (
     <>
-      <Sidebar defaultOpen={defaultOpen} user={user}>{children}</Sidebar>
+      <Sidebar defaultOpen={defaultOpen} user={user} lastCommands={commands}>{children}</Sidebar>
     </>
   )
 }

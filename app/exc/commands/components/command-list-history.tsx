@@ -39,7 +39,10 @@ import { ExecuteCommand } from "@/actions"
 import { toast } from "@/components/ui/use-toast"
 
 
-export const columns: ColumnDef<Command>[] = [
+type commandHistoryList = (CommandHistory & {commandName: string})
+
+
+export const columns: ColumnDef<commandHistoryList>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -63,7 +66,7 @@ export const columns: ColumnDef<Command>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: "commandName",
     header: ({ column }) => {
       return (
         <Button
@@ -75,34 +78,43 @@ export const columns: ColumnDef<Command>[] = [
         </Button>
       )
     },
-    cell: ({ row }) => <div className="">{row.getValue("name")}</div>,
+    cell: ({ row }) => <div className="">{row.getValue("commandName")}</div>,
   },
   {
-    accessorKey: "command",
-    header: () => <div className=" ">Comando</div>,
+    accessorKey: "output",
+    header: () => <div className=" ">Salida</div>,
     cell: ({ row }) => {
-      return <div className="max-w-[200px]  md:max-w-[400px] lg:max-w-[500px] overflow-hidden truncate">{row.getValue("command")}</div>
+      return <div className="max-w-[200px]  md:max-w-[300px] lg:max-w-[400px] overflow-hidden truncate">{row.getValue("output") === '' ? "Vacio" : row.getValue("output")}</div>
     },
   },
   {
-    accessorKey: "device",
-    header: () => <div className=" ">Dispositivo</div>,
+    accessorKey: "status",
+    header: () => <div className=" ">Estado</div>,
     cell: ({ row }) => {
-      return <div className=" max-w-[250px] overflow-hidden">{row.getValue("device")}</div>
+      return <div className=" max-w-[250px] overflow-hidden capitalize">{row.getValue("status")}</div>
     },
   },
   {
-    accessorKey: "created_at",
-    header: () => <div className="text-right">Fecha de Creacion</div>,
+    accessorKey: "updated_at",
+    header: ({column}) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Fecha de ejecución
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    
+    },
     cell: ({ row }) => {
-        const command = row.getValue("created_at")
-      // Format the date
       const formatted = new Intl.DateTimeFormat("en-US", {
         dateStyle: "medium",
         timeStyle: "short",
-      }).format(new Date(row.getValue("created_at")))
+      }).format(new Date(row.getValue("updated_at")))
 
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className=" px-4 font-medium">{formatted}</div>
     },
   },
   {
@@ -128,7 +140,7 @@ export const columns: ColumnDef<Command>[] = [
           toast({
             variant: "default",
             title: "Command executed",
-            description: `The command ${row.original.name} has been executed.`,
+            description: `The command ${row.original.commandName} has been executed.`,
           })
         })
       }
@@ -172,7 +184,7 @@ export const columns: ColumnDef<Command>[] = [
   },
 ]
 
-export function CommandList({data}:{data: Command[] | null}) {
+export function CommandListHistory({data}:{data: commandHistoryList[] | null}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [isPeding, startTransition] = React.useTransition()
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
