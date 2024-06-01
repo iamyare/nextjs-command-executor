@@ -1,6 +1,7 @@
 import React from 'react'
 import { CommandListHistory } from '../commands/components/command-list-history'
 import { getHistoryCommands, getUserSession } from '@/actions'
+import HeadersContent from '@/components/headers'
 
 export default async function HistoryPage() {
     const {user, error} = await getUserSession()
@@ -15,10 +16,7 @@ export default async function HistoryPage() {
 
   return (
     <main className=''>
-      <section className='flex justify-between items-center w-full'>
-        <h2 className=' text-2xl font-semibold'>Historial de ejecuciones</h2>
-
-      </section>
+      <HeadersContent title='Historial de ejecuciones' description='Aquí puedes ver todas las ejecuciones que has realizado.' />
       <CommandListHistory data={commands} />
     </main>
   )

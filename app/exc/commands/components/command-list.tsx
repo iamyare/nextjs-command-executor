@@ -35,8 +35,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { ExecuteCommand } from "@/actions"
-import { toast } from "@/components/ui/use-toast"
+import ButtonExc from "./button-exc"
+
 
 
 export const columns: ColumnDef<Command>[] = [
@@ -110,34 +110,10 @@ export const columns: ColumnDef<Command>[] = [
     enableHiding: false,
     cell: ({ row }) => {
 
-      function executeCommand() {
 
-        React.startTransition(async() => {
-          const {commandError} = await ExecuteCommand({
-            commandId: row.original.id,
-            userId: '6428ab79-6446-4b1f-a968-6d2246426728'
-          })
-          if (commandError) {
-             toast({
-              variant: "destructive",
-              title: "Uh oh! Something went wrong.",
-              description: "There was a problem with your request.",
-            })
-            return undefined
-          }
-          toast({
-            variant: "default",
-            title: "Command executed",
-            description: `The command ${row.original.name} has been executed.`,
-          })
-        })
-      }
 
       return (
-        <Button variant="ghost" className="p-0 aspect-square rounded-full" onClick={executeCommand}>
-          <span className="sr-only">Ejecutar Comando</span>
-          <Play className="h-4 w-4" />
-        </Button>
+        <ButtonExc id={row.original.id} name={row.original.name} />
       )
     },
   },
@@ -172,7 +148,7 @@ export const columns: ColumnDef<Command>[] = [
   },
 ]
 
-export function CommandList({data}:{data: Command[] | null}) {
+export function CommandList({data}:{data: Command[]}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [isPeding, startTransition] = React.useTransition()
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

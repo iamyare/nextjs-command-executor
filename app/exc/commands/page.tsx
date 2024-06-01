@@ -1,3 +1,4 @@
+import HeadersContent from '@/components/headers'
 import { getUserSession, SelectCommand } from '../../../actions'
 import { CommandList } from './components/command-list'
 import { CreateCommandModal } from './components/modal-create'
@@ -20,14 +21,17 @@ export default async function CommandsPage() {
   }
   return (
     <main className=''>
-      <section className='flex justify-between items-center w-full'>
-        <h2 className=' text-2xl font-semibold'>Lista de comandos</h2>
+      <HeadersContent className='flex flex-row justify-between items-center w-full'
+        title='Comandos'
+        description='Aquí puedes ver todos los comandos que has creado.'
+      >
         <CreateCommandModal
           title={'Crear comando'}
           description='Crea un nuevo comando para ejecutar en tus dispositivos.'
           userId={user.id}
         />
-      </section>
+      </HeadersContent>
+
       <CommandList data={commands} />
     </main>
   )

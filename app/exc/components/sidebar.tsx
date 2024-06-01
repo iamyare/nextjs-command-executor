@@ -24,6 +24,7 @@ import LogoSidebar from './logo-sidebar'
 import { Titles } from '@/lib/data'
 import { signOut } from '@/actions'
 import { ThemeToggle } from '@/components/theme-toggle'
+import CommandRecent from './command-recent'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -105,9 +106,9 @@ export default function Sidebar({
   lastCommands
 }: {
   children: React.ReactNode
-  user: User 
-  defaultOpen?: boolean,
-  lastCommands: (CommandHistory & {command: Command})[]
+  user: User
+  defaultOpen?: boolean
+  lastCommands: (CommandHistory & { command: Command })[]
 }) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen)
   const router = useRouter()
@@ -120,38 +121,41 @@ export default function Sidebar({
             <nav
               className={
                 'sticky inset-x-0 top-0 z-[0] flex w-full flex-wrap border-b  py-2.5 text-sm sm:flex-nowrap sm:justify-start sm:py-4  bg-background/20'
-                }
+              }
             >
               <div
                 className='mx-auto flex w-full basis-full items-center px-4 sm:px-6 md:px-8'
                 aria-label='Global'
               >
                 <div className=' me-5 md:hidden lg:me-0 lg:hidden '>
-                <LogoSidebar isOpen={isOpen} />
+                  <LogoSidebar isOpen={isOpen} />
                 </div>
 
                 <div
-                  className={cn('flex w-full items-center justify-end sm:order-3 sm:justify-between sm:gap-x-3', isOpen ? 'md:ms-64' : 'md:ms-20')}
+                  className={cn(
+                    'flex w-full items-center justify-end sm:order-3 sm:justify-between sm:gap-x-3',
+                    isOpen ? 'md:ms-64' : 'md:ms-20'
+                  )}
                 >
                   <h2 className='hidden md:flex items-center space-x-2 text-lg'>
-                    {
-                      (() => {
-                        const label = Titles.find((item) => item.href === pathname)
-                        return label && (
+                    {(() => {
+                      const label = Titles.find(
+                        (item) => item.href === pathname
+                      )
+                      return (
+                        label && (
                           <>
-                                                    <label.icon className='h-5 w-5' />
-                          <span>{label.label}</span>
-                        
+                            <label.icon className='h-5 w-5' />
+                            <span>{label.label}</span>
                           </>
                         )
-
-})()
-                    }
+                      )
+                    })()}
                   </h2>
 
                   {/* Botones */}
                   <div className='flex flex-row items-center justify-end gap-2 '>
-                  <ThemeToggle />
+                    <ThemeToggle />
 
                     {/* Profile dropdown */}
                     <Menu as='div' className='relative '>
@@ -269,7 +273,7 @@ export default function Sidebar({
 
               <section className='h-full space-y-4'>
                 <aside className=' w-full -mt-4 mb-4'>
-                <LogoSidebar isOpen={isOpen} />
+                  <LogoSidebar isOpen={isOpen} />
                 </aside>
 
                 <nav className='h-full  overflow-y-auto  flex w-full flex-col pb-10  '>
@@ -302,45 +306,25 @@ export default function Sidebar({
                       </ul>
                       <Separator className='my-4' />
                       <h3 className='text-sm'>Comandos Recientes</h3>
-                      <ul className='mt-2'>
-                        {
-                          lastCommands.map((item) => (
-                            <li key={item.id}>
-                              <Button
-                                variant={'ghost'}
-                                className='w-full justify-start text-muted-foreground hover:bg-transparent font-normal'
-                              >
-                                <Link href='/history' className='flex items-center'>
-                                  <Terminal className='h-5 w-5' />
-                                  <span className='ml-2'>{item.command.name}</span>
-                                </Link>
-                              </Button>
-                            </li>
-                          ))
-                        }
-
-                      </ul>
+                        <CommandRecent lastCommands={lastCommands} />
                     </>
                   ) : (
                     <ul className='grid space-y-2'>
                       {navigation.map((item) => (
                         <li key={item.name}>
-                          <Button 
-                              variant={'ghost'}
-                              size={'icon'}
-                              className={cn(
-                                pathname === item.href ? 'bg-muted' : '',
-                                'w-full h-10'
-                              )}
-                              asChild>
-
-                          <Link
-                            href={item.href}
-                            
-                            >
-                            <item.icon className='h-5 w-5' />
-                          </Link>
-                            </Button>
+                          <Button
+                            variant={'ghost'}
+                            size={'icon'}
+                            className={cn(
+                              pathname === item.href ? 'bg-muted' : '',
+                              'w-full h-10'
+                            )}
+                            asChild
+                          >
+                            <Link href={item.href}>
+                              <item.icon className='h-5 w-5' />
+                            </Link>
+                          </Button>
                         </li>
                       ))}
                     </ul>
@@ -360,9 +344,8 @@ export default function Sidebar({
         `}
       >
         <section className='p-3'>{children}</section>
-        <div className="absolute top-0 left-0 inset-0 z-[-4] h-full w-full bg-dot"></div>
-        <div className="absolute left-0 top-0 z-[-2] w-full h-full bg-resplandor_1"></div>
-      
+        <div className='absolute top-0 left-0 inset-0 z-[-4] h-full w-full bg-dot'></div>
+        <div className='absolute left-0 top-0 z-[-2] w-full h-full bg-resplandor_1'></div>
       </main>
     </>
   )

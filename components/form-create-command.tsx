@@ -186,7 +186,7 @@ export default function FormCreateCommand({userId, className}: {userId: string ,
       </AnimatePresence>
 
       <div className='flex w-full justify-end'>
-        <Button type='submit'>
+        <Button type='submit' className='glow text-white'>
           {isPeding ? (<Loader className=' size-4 animate-spin'/>) : (<PenLine className='size-4' />)}
           <span className='ml-2'>Crear comando</span>
           </Button>

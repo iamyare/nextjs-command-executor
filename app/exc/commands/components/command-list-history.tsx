@@ -184,7 +184,7 @@ export const columns: ColumnDef<commandHistoryList>[] = [
   },
 ]
 
-export function CommandListHistory({data}:{data: commandHistoryList[] | null}) {
+export function CommandListHistory({data}:{data: commandHistoryList[]}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [isPeding, startTransition] = React.useTransition()
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -255,7 +255,7 @@ export function CommandListHistory({data}:{data: commandHistoryList[] | null}) {
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow  key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead key={header.id}>
