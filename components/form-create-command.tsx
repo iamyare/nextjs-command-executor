@@ -26,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue
 } from '@/components/ui/select'
-import { Loader, PenLine, Terminal } from 'lucide-react'
+import { Loader, PenLine, Sparkles, Terminal } from 'lucide-react'
 import { useTransition } from 'react'
 
 import { toast } from '@/components/ui/use-toast'
@@ -161,7 +161,14 @@ export default function FormCreateCommand({userId, className}: {userId: string ,
               name='command'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Comando</FormLabel>
+                  <FormLabel className=' flex items-center '>
+                    Comando
+                    <Button type='button' variant={'ghost'} size={'icon'} className='ml-2 h-fit w-fit hover:bg-transparent p-0 relative group'>
+                    <Sparkles className=' text-muted-foreground hover:text-foreground duration-300 transition-colors  size-4  cursor-pointer' />
+                  <div className='absolute size-2 top-0 right-0 bg-white blur-sm -z-[1] duration-500 transition-opacity opacity-0 group-hover:opacity-50'></div>
+                  <div className='absolute size-5 top-0 right-0 bg-primary blur-md -z-[1] duration-500 transition-opacity opacity-0 group-hover:opacity-100'></div>
+                    </Button>
+                  </FormLabel>
                   <FormControl>
                     <div className='relative'>
                       <Terminal className='absolute text-muted-foreground size-4 left-3 top-1/2 -translate-y-1/2' />

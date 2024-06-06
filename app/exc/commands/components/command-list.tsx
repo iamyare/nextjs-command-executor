@@ -13,7 +13,7 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Play } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal, Play, Trash } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -36,6 +36,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import ButtonExc from "./button-exc"
+import { DeleteCommandModal } from "./delete-command-modal"
+
 
 
 export const columns: ColumnDef<Command>[] = [
@@ -141,6 +143,7 @@ export const columns: ColumnDef<Command>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem>View customer</DropdownMenuItem>
             <DropdownMenuItem>View payment details</DropdownMenuItem>
+          <DeleteCommandModal nameCommand={row.original.name} idCommand={row.original.id} />
           </DropdownMenuContent>
         </DropdownMenu>
       )

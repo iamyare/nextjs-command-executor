@@ -29,13 +29,18 @@ const DialogOverlay = React.forwardRef<
 ))
 DialogOverlay.displayName = DialogPrimitive.Overlay.displayName
 
+type DialogContentProps = React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content> & {
+  classNameOverlay?: string;
+  classNameGradient?: string;
+};
+
 const DialogContent = React.forwardRef<
   React.ElementRef<typeof DialogPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  DialogContentProps
+>(({ className, classNameOverlay, classNameGradient, children, ...props }, ref) => (
   <DialogPortal>
-    <DialogOverlay />
-    <div className='min-h-[calc(100vh-50vh)]  min-w-[calc(100vw-50vw)] max-w-[780px] max-h-[780px] w-full h-full md:min-h-[780px] md:min-w-[780px] rounded-full fixed top-1/2 left-1/2 gradient-experience__1 blur-[150px] -translate-y-1/2 -translate-x-1/2  z-[-2] opacity-animation'></div>
+    <DialogOverlay className={classNameOverlay} />
+    <div className={cn('min-h-[calc(100vh-50vh)]  min-w-[calc(100vw-50vw)] max-w-[780px] max-h-[780px] w-full h-full md:min-h-[780px] md:min-w-[780px] rounded-full fixed top-1/2 left-1/2 gradient-experience__1 blur-[150px] -translate-y-1/2 -translate-x-1/2  z-[-2] opacity-animation', classNameGradient)}></div>
 
     <DialogPrimitive.Content
       ref={ref}

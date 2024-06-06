@@ -92,3 +92,12 @@ export async function getUserSession () {
 
     return {user: user, error: userError}
 }
+
+export async function deleteCommandById({commandId}:{commandId:string}) {
+    const {error} = await supabase
+    .from('commands')
+    .delete()
+    .eq('id', commandId)
+
+    return {error}
+}
