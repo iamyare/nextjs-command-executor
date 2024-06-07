@@ -25,13 +25,15 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Loader, PenLine, Sparkles, Terminal } from 'lucide-react'
-import { useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 
 import { toast } from '@/components/ui/use-toast'
 import { InsertCommand } from '@/actions'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { gemini } from '@/lib/gemini'
+import { IAFormInput } from './ai-form'
+
 
 const FormSchema = z.object({
   name: z.string().min(1, {
@@ -46,7 +48,7 @@ const FormSchema = z.object({
   user_id: z.string().min(1, {
     message: 'El usuario es requerido'
   })
-})
+});
 
 export default function FormCreateCommand({
   userId,
@@ -56,6 +58,7 @@ export default function FormCreateCommand({
   className?: string
 }) {
   const [isPeding, startTransition] = useTransition()
+  const [openExternal, setOpenExternal] = useState(false)
   const [isAIPending, setIsAITransition] = useTransition()
   const router = useRouter()
 
@@ -68,6 +71,9 @@ export default function FormCreateCommand({
       user_id: userId
     }
   })
+
+
+
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     startTransition(async () => {
@@ -210,27 +216,10 @@ commandResponse = commandResponse
                   <FormItem>
                     <FormLabel className=' flex items-center '>
                       Comando
-                      <Button
-                        type='button'
-                        onClick={promptAI}
-                        variant={'ghost'}
-                        size={'icon'}
-                        className='ml-2 h-fit w-fit hover:bg-transparent p-0 relative group'
-                      >
-                        {
-                          isAIPending ? (
-                            <Loader className=' text-muted-foreground size-4 animate-spin' />
-                          ) : (
 
-                            <Sparkles className=' text-muted-foreground hover:text-foreground duration-300 transition-colors  size-4  cursor-pointer' />
-                          )
-                        }
-                        <div className='absolute size-2 top-0 right-0 bg-white blur-sm -z-[1] duration-500 transition-opacity opacity-0 group-hover:opacity-50'></div>
-                        <div className='absolute size-5 top-0 right-0 bg-primary blur-md -z-[1] duration-500 transition-opacity opacity-0 group-hover:opacity-100'></div>
-                      </Button>
                     </FormLabel>
                     <FormControl>
-                      <div className='relative'>
+                      {/* <div className='relative'>
                         <Terminal className='absolute text-muted-foreground size-4 left-3 top-1/2 -translate-y-1/2' />
 
                         <Input
@@ -238,7 +227,9 @@ commandResponse = commandResponse
                           className='pl-8'
                           {...field}
                         />
-                      </div>
+                      </div> */}
+                      <IAFormInput field={field} watch={form.watch} />
+
                     </FormControl>
                     <FormDescription>
                       Este es el código que se ejecutará cuando se invoque el
