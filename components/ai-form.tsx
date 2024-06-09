@@ -34,6 +34,7 @@ export function IAFormInput({ field, watch }: IAFormInputProps) {
     if (commandValue.startsWith('#')) {
       setOpen(true)
     } else {
+      setCommandAi(null)
       setOpen(false)
     }
   }, [commandValue])
@@ -87,6 +88,7 @@ Expected response: [{title: "List files in the folder", command: "ls"}, {title: 
     return () => document.removeEventListener('keydown', down)
   }, [promptAI])
 
+
   return (
     <div className='relative'>
       <Terminal className='absolute text-muted-foreground size-4 left-3 top-1/2 -translate-y-1/2' />
@@ -96,7 +98,7 @@ Expected response: [{title: "List files in the folder", command: "ls"}, {title: 
       <AnimatePresence>
         {open && (
           <motion.div
-            className='absolute bg-background/90 z-[100]  rounded-md max-h-[100px] p-4 w-full right-0 bottom-[45px] backdrop-blur-sm'
+            className='absolute bg-background/90 overflow-y-auto  rounded-md max-h-[100px] p-4 w-full right-0 bottom-[45px] backdrop-blur-sm'
             initial='hidden'
             animate='visible'
             exit='exit'
@@ -112,18 +114,30 @@ Expected response: [{title: "List files in the folder", command: "ls"}, {title: 
               transition={{ duration: 0.5 }}
             >
               {commandAi ? (
-                <>
+                <ul>
                   {commandAi.map((command, index) => (
-                    <div key={index} className='flex flex-col rounded-md px-2 py-2 hover:bg-accent/50'>
+                    <li key={index} className='flex relative overflow-hidden group flex-col rounded-md px-2 py-2 hover:bg-accent/50 cursor-pointer' onClick={
+                      () => {
+                        field.onChange(command.command)
+                        setOpen(false)
+                      }
+                    }>
                       <h4 className='font-medium text-foreground'>
                         {command.title}
                       </h4>
-                      <p className='text-muted-foreground text-sm'>
+                      <p className='text-muted-foreground inline-block text-sm'>
+                        <Terminal className='inline-block size-4 mr-1' />
                         {command.command}
                       </p>
-                    </div>
+                      <div className="absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]">
+        <div className="relative blur-lg h-full w-8 bg-foreground/20"></div>
+    </div>
+                    </li>
                   ))}
-                </>
+
+
+
+                </ul>
               ) : (
                 <>
                   {isAIPending ? (
