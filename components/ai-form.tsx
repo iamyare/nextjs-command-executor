@@ -65,14 +65,17 @@ Expected response: Error: The prompt is not related to terminal commands or term
         return
       }
 
+      console.log(commandResponse)
+
       // Eliminar las comillas adicionales y los backticks
       commandResponse = commandResponse
         .replace(/`/g, '')
         .replace(/json/g, '')
         .replace(/\\"/g, "'")
         .replace(/(\w+):/g, '"$1":') // Asegurar que las claves estén entre comillas dobles
-        .replace(/\\\\"/g, '\\"'); // Escapar correctamente las comillas dobles dentro de los valores
-    
+        .replace(/\\\\"/g, '\\"') // Escapar correctamente las comillas dobles dentro de los valores
+        .replace(/\\ /g, ' ');
+
 
       // Convertir la respuesta de string a objeto
       let commandResponseObject: CommandAI[]

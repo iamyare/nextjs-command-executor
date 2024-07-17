@@ -67,6 +67,8 @@ export async function readUserSession () {
 
     //obtener los 5 ultimos comandos ejecutados
     export async function getLastCommands ({userId}:{userId:string}) {
+
+      console.log('userId', userId)
         const {data:commands, error:commandsError} = await supabase
         .from('command_history')
         .select('*, command:commands!inner(*)')
@@ -80,6 +82,7 @@ export async function readUserSession () {
 
 export async function getUserSession () {
     const {data, error} = await getUser()
+
     if (error) {
         return {user: null, error}
     }
@@ -89,6 +92,7 @@ export async function getUserSession () {
     .select('*')
     .eq('id', data.user.id)
     .single()
+
 
     return {user: user, error: userError}
 }

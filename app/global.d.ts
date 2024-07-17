@@ -5,5 +5,7 @@ declare global {
     type User = DB['public']['Tables']['users']['Row']
     type Command = DB['public']['Tables']['commands']['Row']
     type CommandInsert = DB['public']['Tables']['commands']['Insert']
+    type CommnadUpdate = DB['public']['Tables']['commands']['Update']
     type CommandHistory = DB['public']['Tables']['command_history']['Row']
+
 }

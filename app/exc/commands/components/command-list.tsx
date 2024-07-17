@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/table"
 import ButtonExc from "./button-exc"
 import { DeleteCommandModal } from "./delete-command-modal"
+import EditCommandModal from "./edit-command-modal"
 
 
 
@@ -141,9 +142,10 @@ export const columns: ColumnDef<Command>[] = [
               Copy payment ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          <DeleteCommandModal nameCommand={row.original.name} idCommand={row.original.id} />
+            <div className="flex flex-col w-full space-y-2">
+            <EditCommandModal commandID={row.original.id} command={row.original.command} commandName={row.original.name}/>
+            <DeleteCommandModal nameCommand={row.original.name} idCommand={row.original.id} />
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       )
@@ -182,9 +184,9 @@ export function CommandList({data}:{data: Command[]}) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center py-4">
+      <div className="flex items-center justify-between space-x-2 py-4">
         <Input
-          placeholder="Filter Nombre..."
+          placeholder="Filtrar por nombre"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -219,7 +221,7 @@ export function CommandList({data}:{data: Command[]}) {
         </DropdownMenu>
       </div>
       <div className="rounded-md border">
-        <Table>
+        <Table >
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>

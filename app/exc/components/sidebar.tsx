@@ -180,7 +180,7 @@ export default function Sidebar({
                         leaveTo='transform opacity-0 scale-95'
                       >
                         <div>
-                          <Menu.Items className='absolute right-0 z-10 mt-2 w-60 origin-top-right rounded-md bg-popover border p-1 shadow-xl shadow-black/5 '>
+                          <Menu.Items className='absolute right-0 z-50 mt-2 w-60 origin-top-right rounded-md bg-popover border p-1 shadow-xl shadow-black/5 '>
                             <Menu.Item>
                               <div className='w-full pointer-events-none'>
                                 <div className='flex items-center gap-2 p-1'>
