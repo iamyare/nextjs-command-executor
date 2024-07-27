@@ -18,7 +18,13 @@ import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from './ui/use-toast'
 import { cn } from '@/lib/utils'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue
+} from './ui/select'
 import { IAFormInput } from './ai-form'
 import { Loader, PenLine } from 'lucide-react'
 
@@ -37,14 +43,19 @@ const FormSchema = z.object({
   })
 })
 
-interface UpdateCommandModal  {
-    commandID: string
-    commandName: string
-    command: string
-    className?: string
+interface UpdateCommandModal {
+  commandID: string
+  commandName: string
+  command: string
+  className?: string
 }
 
-export default function FormEditCommand({ commandID, commandName, command, className }: UpdateCommandModal) {
+export default function FormEditCommand({
+  commandID,
+  commandName,
+  command,
+  className
+}: UpdateCommandModal) {
   const [isPeding, startTransition] = useTransition()
   const router = useRouter()
 
@@ -93,43 +104,35 @@ export default function FormEditCommand({ commandID, commandName, command, class
           )}
         />
 
-<FormField
-                control={form.control}
-                name='device'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Dispositivo</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder='Seleccione el dispositivo' />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value='id21321'>
-                          Mackbook Air de Yamir
-                        </SelectItem>
-                        <SelectItem value='id217362781'>PC-Station</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='command'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className=' flex items-center '>
-                      Comando
-
-                    </FormLabel>
-                    <FormControl>
-                      {/* <div className='relative'>
+        <FormField
+          control={form.control}
+          name='device'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Dispositivo</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder='Seleccione el dispositivo' />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value='id21321'>Mackbook Air de Yamir</SelectItem>
+                  <SelectItem value='id217362781'>PC-Station</SelectItem>
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='command'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className=' flex items-center '>Comando</FormLabel>
+              <FormControl>
+                {/* <div className='relative'>
                         <Terminal className='absolute text-muted-foreground size-4 left-3 top-1/2 -translate-y-1/2' />
 
                         <Input
@@ -138,19 +141,17 @@ export default function FormEditCommand({ commandID, commandName, command, class
                           {...field}
                         />
                       </div> */}
-                      <IAFormInput field={field} watch={form.watch} />
+                <IAFormInput field={field} watch={form.watch} />
+              </FormControl>
+              <FormDescription>
+                Este es el código que se ejecutará cuando se invoque el comando.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-                    </FormControl>
-                    <FormDescription>
-                      Este es el código que se ejecutará cuando se invoque el
-                      comando.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-<div className='flex w-full justify-end'>
+        <div className='flex w-full justify-end'>
           <Button type='submit' className='glow text-white'>
             {isPeding ? (
               <Loader className=' size-4 animate-spin' />
@@ -160,7 +161,6 @@ export default function FormEditCommand({ commandID, commandName, command, class
             <span className='ml-2'>Actualizar comando</span>
           </Button>
         </div>
-
       </form>
     </Form>
   )

@@ -24,10 +24,10 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Loader, PenLine } from 'lucide-react'
-import {  useState, useTransition } from 'react'
+import {  useEffect, useState, useTransition } from 'react'
 
 import { toast } from '@/components/ui/use-toast'
-import { InsertCommand } from '@/actions'
+import { getDevicesByUser, InsertCommand } from '@/actions'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { gemini } from '@/lib/gemini'
@@ -60,6 +60,7 @@ export default function FormCreateCommand({
   const [openExternal, setOpenExternal] = useState(false)
   const [isAIPending, setIsAITransition] = useTransition()
   const router = useRouter()
+  const [devices, setDevices] = useState<Device[] | null>([])
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -70,6 +71,21 @@ export default function FormCreateCommand({
       user_id: userId
     }
   })
+
+  useEffect(() => {
+    async function getDevices() {
+      const {devices, devicesError} = await getDevicesByUser({ userId: userId })
+      if (devicesError) {
+        console.log(devicesError)
+        return
+      }
+      setDevices(devices)
+    }
+    getDevices()
+  }, [userId])
+
+
+
 
 
 
@@ -186,10 +202,20 @@ commandResponse = commandResponse
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value='id21321'>
-                          Mackbook Air de Yamir
-                        </SelectItem>
-                        <SelectItem value='id217362781'>PC-Station</SelectItem>
+                        {
+                          devices ? (
+
+                            devices?.map((device) => (
+                              <SelectItem value={device.id} key={device.id}>
+                                {device.name} - <span className='text-muted-foreground'>{device.os}</span>
+                              </SelectItem>
+                            ))
+                          ):(
+                            <SelectItem value='loading'>
+                              Cargando dispositivos...
+                            </SelectItem>
+                          )
+                        }
                       </SelectContent>
                     </Select>
                     <FormMessage />
