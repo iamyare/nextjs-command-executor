@@ -111,3 +111,18 @@ export async function getDevicesByUser({ userId }: { userId: string }) {
 
   return { devices, devicesError }
 }
+
+export async function InsertToken({ data }: {data: TokenInsert}) {
+  const { data: tokenInsertResult, error: tokenInsertError } = 
+    await supabase.from('tokens').insert({ ...data })
+
+  return { tokenInsertResult, tokenInsertError }
+}
+
+export async function getTokensByUser({ userId }: { userId: string }) {
+  const {data: tokens, error: tokensError} = 
+    await supabase.from('tokens')
+    .select('*')
+    .eq('user_id', userId)
+  return { tokens, tokensError } 
+}

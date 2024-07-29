@@ -9,5 +9,6 @@ declare global {
     type CommandHistory = DB['public']['Tables']['command_history']['Row']
     type Device = DB['public']['Tables']['devices']['Row']
     type DeviceInsert = DB['public']['Tables']['devices']['Insert']
-
+    type Token = DB['public']['Tables']['tokens']['Row']
+    type TokenInsert = DB['public']['Tables']['tokens']['Insert']
 }

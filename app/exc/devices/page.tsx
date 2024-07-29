@@ -1,6 +1,7 @@
 import HeadersContent from '@/components/headers'
 import { getDevicesByUser, getUserSession } from '../../../actions'
 import { DeviceList } from './components/device-list'
+import { CreateTokenModal } from './components/modal-create-token'
 
 export default async function CommandsPage() {
   const {user, error} = await getUserSession()
@@ -22,8 +23,12 @@ export default async function CommandsPage() {
         title='Dispositivos'
         description='Aquí puedes ver todos los dispositivos que has registrado.'
       >
+      <CreateTokenModal
+          title={'Token generado'}
+          description='Este es su token único que puede utilizarse para autenticar su aplicación.'
+          userId={user.id}
+        />
       </HeadersContent>
-
       <DeviceList data={devices} />
     </main>
   )
