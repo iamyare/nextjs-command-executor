@@ -19,7 +19,7 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from '@/components/ui/drawer'
-import {  Plus } from 'lucide-react'
+import {  Fingerprint, Plus } from 'lucide-react'
 import FormCreateToken from '@/components/form-create-token'
 
 export function CreateTokenModal({userId, title, description}: {userId: string, title: string, description: string}) {
@@ -31,7 +31,7 @@ export function CreateTokenModal({userId, title, description}: {userId: string, 
       <Dialog  open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
         <Button variant={'outline'} type='submit'>
-          <Plus className='size-4 mr-2' />
+          <Fingerprint className='size-4 mr-2' />
           Generar token
         </Button>
         </DialogTrigger>
@@ -52,7 +52,7 @@ export function CreateTokenModal({userId, title, description}: {userId: string, 
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <Button variant={'outline'}  type='submit'>
-          <Plus className='size-4 mr-2' />
+          <Fingerprint className='size-4 mr-2' />
           Generar token
         </Button>
       </DrawerTrigger>

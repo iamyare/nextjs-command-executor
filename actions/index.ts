@@ -112,9 +112,9 @@ export async function getDevicesByUser({ userId }: { userId: string }) {
   return { devices, devicesError }
 }
 
-export async function InsertToken({ data }: {data: TokenInsert}) {
+export async function createToken({ userId }: {userId: string}) {
   const { data: tokenInsertResult, error: tokenInsertError } = 
-    await supabase.from('tokens').insert({ ...data })
+    await supabase.from('tokens').insert({user_id: userId}).select('*').single()
 
   return { tokenInsertResult, tokenInsertError }
 }
@@ -124,5 +124,6 @@ export async function getTokensByUser({ userId }: { userId: string }) {
     await supabase.from('tokens')
     .select('*')
     .eq('user_id', userId)
+    .single()
   return { tokens, tokensError } 
 }
