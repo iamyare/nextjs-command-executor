@@ -78,7 +78,7 @@ export function IAFormInput({ field, watch,osDevice }: IAFormInputProps) {
         setCommandAi([{ id: 'error', title: errorMessage, command: null }])
       }
     })
-  }, [commandValue])
+  }, [commandValue, osDevice])
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
