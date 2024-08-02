@@ -50,7 +50,8 @@ export function IAFormInput({ field, watch,osDevice }: IAFormInputProps) {
   
     startTransition(async () => {
       const prompt = commandValue.slice(1)
-      const OS = osDevice
+      const OS = osDevice === 'darwin' ? 'MacOs' : osDevice
+
   
       try {
         const { object } = await generateCommands({

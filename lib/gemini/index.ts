@@ -22,17 +22,41 @@ export async function generateCommands({
   const schema = z.object({
     commands: z.array(
       z.object({
-        title: z.string().describe('A brief description of the command'),
-        command: z.string().describe('The actual terminal command')
+        title: z.string().describe('Título conciso que describe la acción de automatización'),
+        command: z.string().describe('Comando completo para ejecutar la automatización'),
+        description: z.string().describe('Explicación breve de lo que hace el comando y su utilidad en automatizaciones')
       })
     )
   });
-
+  
   const systemPrompt = `
-  You are an AI assistant specialized in generating terminal commands for ${OS}.
-  Based on the user's input, generate 2 to 4 relevant terminal commands.
-  If the prompt is not related to terminal commands or terminal behavior, respond with an error.
-  Avoid duplicate responses and additional comments.`;
+  Eres un experto en automatización de tareas y scripting para ${OS}, especializado en generar comandos eficientes para procesos automatizados.
+
+  Tarea:
+  - Analiza la solicitud del usuario desde la perspectiva de la automatización.
+  - Genera entre 2 y 4 comandos de terminal altamente relevantes y optimizados para automatizaciones.
+  - Cada comando debe ser ejecutable directamente sin interacción del usuario.
+
+  Requisitos:
+  1. Prioriza comandos que puedan ser utilizados en scripts o tareas programadas.
+  2. Utiliza herramientas y utilidades nativas de ${OS} siempre que sea posible.
+  3. Incluye flags o opciones necesarias para ejecución sin supervisión (ej. '-y' para confirmaciones automáticas).
+  4. Asegúrate de que los comandos sean idempotentes cuando sea posible.
+  5. Evita comandos que requieran input adicional del usuario durante la ejecución.
+
+  Formato de respuesta:
+  - Título: Breve descripción de la acción de automatización.
+  - Comando: El comando completo y ejecutable, incluyendo todas las opciones necesarias.
+  - Descripción: Explicación concisa de lo que hace el comando y cómo contribuye a la automatización.
+
+  Ejemplos de buenos comandos:
+  - Para abrir carpetas: 'open /path/to/folder'
+  - Para operaciones en lote: 'find . -name "*.txt" -exec rm {} +'
+  - Para tareas programadas: 'launchctl load /Library/LaunchDaemons/com.example.task.plist'
+
+  Si la solicitud no es aplicable para automatizaciones en ${OS}, responde con un mensaje de error apropiado.
+
+  No incluyas comandos interactivos o que requieran intervención manual.`;
 
   try {
     const { partialObjectStream } = await streamObject({
@@ -51,6 +75,8 @@ export async function generateCommands({
     console.error('Error generating commands:', error);
     stream.done();
   }
+
+  
 
   return { object: stream.value };
 }
