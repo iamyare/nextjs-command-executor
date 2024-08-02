@@ -188,7 +188,7 @@ export default function Sidebar({
                                     <p className='text-sm font-semibold truncate w-full '>
                                       {user.full_name}
                                     </p>
-                                    <p className='text-xs truncate w-full  text-neutral-500'>
+                                    <p className='text-xs truncate w-full  text-muted-foreground'>
                                       {user.email}
                                     </p>
                                   </div>
