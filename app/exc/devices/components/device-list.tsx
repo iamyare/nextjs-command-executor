@@ -35,35 +35,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import ButtonExc from "./button-exc"
-import { DeleteCommandModal } from "./delete-command-modal"
-import EditCommandModal from "./edit-command-modal"
 
-
-
-export const columns: ColumnDef<Command>[] = [
-  // {
-  //   id: "select",
-  //   header: ({ table }) => (
-  //     <Checkbox
-  //       checked={
-  //         table.getIsAllPageRowsSelected() ||
-  //         (table.getIsSomePageRowsSelected() && "indeterminate")
-  //       }
-  //       onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-  //       aria-label="Select all"
-  //     />
-  //   ),
-  //   cell: ({ row }) => (
-  //     <Checkbox
-  //       checked={row.getIsSelected()}
-  //       onCheckedChange={(value) => row.toggleSelected(!!value)}
-  //       aria-label="Select row"
-  //     />
-  //   ),
-  //   enableSorting: false,
-  //   enableHiding: false,
-  // },
+export const columns: ColumnDef<Device>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => {
@@ -81,17 +54,10 @@ export const columns: ColumnDef<Command>[] = [
     cell: ({ row }) => <div className="px-2">{row.getValue("name")}</div>,
   },
   {
-    accessorKey: "command",
-    header: () => <div className=" ">Comando</div>,
+    accessorKey: "os",
+    header: () => <div className=" ">Sistema Operativo</div>,
     cell: ({ row }) => {
-      return <div className="max-w-[200px]  md:max-w-[400px] lg:max-w-[500px] overflow-hidden truncate">{row.getValue("command")}</div>
-    },
-  },
-  {
-    accessorKey: "device",
-    header: () => <div className=" ">Dispositivo</div>,
-    cell: ({ row }) => {
-      return <div className=" max-w-[250px] overflow-hidden">{row.getValue("device")}</div>
+      return <div className=" max-w-[250px] overflow-hidden">{row.getValue("os")}</div>
     },
   },
   {
@@ -106,18 +72,6 @@ export const columns: ColumnDef<Command>[] = [
       }).format(new Date(row.getValue("created_at")))
 
       return <div className="text-right font-medium">{formatted}</div>
-    },
-  },
-  {
-    id: "execute",
-    enableHiding: false,
-    cell: ({ row }) => {
-
-
-
-      return (
-        <ButtonExc id={row.original.id} name={row.original.name} />
-      )
     },
   },
   {
@@ -143,8 +97,6 @@ export const columns: ColumnDef<Command>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <div className="flex flex-col w-full space-y-2">
-            <EditCommandModal commandID={row.original.id} command={row.original.command} commandName={row.original.name}/>
-            <DeleteCommandModal nameCommand={row.original.name} idCommand={row.original.id} />
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -153,7 +105,7 @@ export const columns: ColumnDef<Command>[] = [
   },
 ]
 
-export function CommandList({data}:{data: Command[]}) {
+export function DeviceList({data}:{data: Device[]}) {
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [isPeding, startTransition] = React.useTransition()
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(

@@ -94,23 +94,52 @@ export type Database = {
           created_at: string
           id: string
           name: string
+          os: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          id?: string
+          id: string
           name: string
+          os: string
           user_id: string
         }
         Update: {
           created_at?: string
           id?: string
           name?: string
+          os?: string
           user_id?: string
         }
         Relationships: [
           {
             foreignKeyName: "devices_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tokens: {
+        Row: {
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tokens_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
@@ -155,7 +184,12 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_unique_token_id: {
+        Args: {
+          length_param?: number
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
