@@ -30,7 +30,6 @@ import { toast } from '@/components/ui/use-toast'
 import { getDevicesByUser, InsertCommand } from '@/actions'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
-import { gemini } from '@/lib/gemini'
 import { IAFormInput } from './ai-form'
 
 
@@ -57,8 +56,6 @@ export default function FormCreateCommand({
   className?: string
 }) {
   const [isPeding, startTransition] = useTransition()
-  const [openExternal, setOpenExternal] = useState(false)
-  const [isAIPending, setIsAITransition] = useTransition()
   const router = useRouter()
   const [devices, setDevices] = useState<Device[] | null>([])
 
@@ -85,11 +82,6 @@ export default function FormCreateCommand({
   }, [userId])
 
 
-
-
-
-
-
   function onSubmit(data: z.infer<typeof FormSchema>) {
     startTransition(async () => {
       const { commandInsertError } = await InsertCommand({ data: data })
@@ -113,47 +105,6 @@ export default function FormCreateCommand({
     })
   }
 
-  function promptAI() {
-    
-
-    setIsAITransition(async () => {
-      const prompt = 'abrir youtube en Edge'
-      const SO = 'MacOs'
-const promptStart = `Based on the input "${prompt}", generate 1 to 3 terminal commands for ${SO}. Avoid duplicate responses and additional comments. 
-Example: 
-Input: "open calculator"
-Expected response: [{title: "Open Calculator in MacOs", command: "open -a Calculator.app"}]
-Input: "show list of files in the folder"
-Expected response: [{title: "List files in the folder", command: "ls"}, {title: "List files in the folder with details", command: "ls -l"}]`
-      const response = await gemini.generateContent(promptStart)
-      let commandResponse = response.response.text()
-
-      console.log('crudo: ',commandResponse)
-
-      
-  // Eliminar las comillas adicionales y los backticks
-commandResponse = commandResponse
-  .replace(/`/g, '')
-  .replace(/json/g, '')
-  .replace(/\\"/g, "'")
-
-
-
-      console.log('formateado: ',commandResponse)
-
-
-      // Convertir la respuesta de string a objeto
-      let commandResponseObject
-      
-      try {
-        commandResponseObject = JSON.parse(commandResponse)
-      } catch (error) {
-        commandResponseObject = { title: error, command: null }
-      }
-
-      console.log(commandResponseObject)
-    })
-  }
 
   return (
     <Form {...form}>
@@ -253,7 +204,9 @@ commandResponse = commandResponse
                           {...field}
                         />
                       </div> */}
-                      <IAFormInput field={field} watch={form.watch} />
+                      <IAFormInput field={field} watch={form.watch} osDevice={
+                        devices?.find((device) => device.id === form.watch('device'))?.os ?? ''
+                      } />
 
                     </FormControl>
                     <FormDescription>

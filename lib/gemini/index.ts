@@ -1,18 +1,56 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+'use server';
 
-// Access your API key as an environment variable (see "Set up your API key" above)
-const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_KEY ?? '');
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createStreamableValue } from 'ai/rsc';
+import { z } from 'zod';
+import { streamObject } from 'ai';
 
-// ...
+export async function generateCommands({
+  prompt,
+  OS = 'MacOs',
+  apiKey,
+}: {
+  prompt: string;
+  OS?: string;
+  apiKey: string;
+}) {
+  const google = createGoogleGenerativeAI({
+    apiKey: apiKey ?? ''
+  });
+  const stream = createStreamableValue();
 
-const generationConfig = {
-    stopSequences: ["red"],
-    maxOutputTokens: 200,
-    temperature: 0.9,
-    topP: 0.1,
-    topK: 16,
-  };
+  const schema = z.object({
+    commands: z.array(
+      z.object({
+        title: z.string().describe('A brief description of the command'),
+        command: z.string().describe('The actual terminal command')
+      })
+    )
+  });
 
-// The Gemini 1.5 models are versatile and work with most use cases
-export const gemini = genAI.getGenerativeModel({ model: "gemini-1.5-flash", generationConfig});
+  const systemPrompt = `
+  You are an AI assistant specialized in generating terminal commands for ${OS}.
+  Based on the user's input, generate 2 to 4 relevant terminal commands.
+  If the prompt is not related to terminal commands or terminal behavior, respond with an error.
+  Avoid duplicate responses and additional comments.`;
 
+  try {
+    const { partialObjectStream } = await streamObject({
+      model: google('models/gemini-1.5-flash-latest'),
+      system: systemPrompt,
+      prompt: prompt,
+      schema: schema,
+    });
+
+    for await (const partialObject of partialObjectStream) {
+      stream.update(partialObject);
+    }
+
+    stream.done();
+  } catch (error) {
+    console.error('Error generating commands:', error);
+    stream.done();
+  }
+
+  return { object: stream.value };
+}

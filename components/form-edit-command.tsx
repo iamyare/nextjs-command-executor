@@ -141,7 +141,11 @@ export default function FormEditCommand({
                           {...field}
                         />
                       </div> */}
-                <IAFormInput field={field} watch={form.watch} />
+                <IAFormInput
+                  field={field}
+                  watch={form.watch}
+                  osDevice={form.watch('device')}
+                />
               </FormControl>
               <FormDescription>
                 Este es el código que se ejecutará cuando se invoque el comando.
