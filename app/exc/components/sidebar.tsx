@@ -102,7 +102,7 @@ export default function Sidebar({
   children: React.ReactNode
   user: User
   defaultOpen?: boolean
-  lastCommands: (CommandHistory & { command: Command })[]
+  lastCommands: (CommandHistory & { command: Command })[] | null
 }) {
   const [isOpen, setIsOpen] = React.useState(defaultOpen)
   const router = useRouter()
