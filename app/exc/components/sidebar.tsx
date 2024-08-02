@@ -44,14 +44,6 @@ const navigation = [
   { name: 'Comandos', href: '/exc/commands', icon: SquareTerminal }
 ]
 
-const history = [
-  { name: 'Abrir carpetas', href: '/history' },
-  { name: 'Ejecutar comandos', href: '/history' },
-  { name: 'Cerrar aplicaciones', href: '/history' },
-  { name: 'Apagar computadora', href: '/history' },
-  { name: 'Reiniciar computadora', href: '/history' }
-]
-
 export function BreadcrumbNavbar({ isOpen }: { isOpen: boolean }) {
   return (
     <div className='sticky  inset-x-0 top-0 z-0 border-y  px-4 sm:px-2 md:hidden md:px-4 lg:hidden text-foreground '>
@@ -122,7 +114,7 @@ export default function Sidebar({
           <>
             <nav
               className={
-                'sticky inset-x-0 top-0 z-[0] flex w-full flex-wrap border-b  py-2.5 text-sm sm:flex-nowrap sm:justify-start sm:py-4  bg-background/20'
+                'sticky inset-x-0 top-0 z-[50] flex w-full flex-wrap border-b  py-2.5 text-sm sm:flex-nowrap sm:justify-start sm:py-4  bg-background/20'
               }
             >
               <div
@@ -160,7 +152,7 @@ export default function Sidebar({
                     <ThemeToggle />
 
                     {/* Profile dropdown */}
-                    <Menu as='div' className='relative '>
+                    <Menu as='div' className='relative'>
                       <Menu.Button className='relative  rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2  ring-offset-background hover:ring-2 hover:ring-offset-2 hover:ring-muted'>
                         <span className='absolute -inset-1.5' />
                         <span className='sr-only'>Abrir Menu</span>
@@ -181,7 +173,7 @@ export default function Sidebar({
                         leaveFrom='transform opacity-100 scale-100'
                         leaveTo='transform opacity-0 scale-95'
                       >
-                        <div>
+
                           <Menu.Items className='absolute right-0 z-50 mt-2 w-60 origin-top-right rounded-md bg-popover border p-1 shadow-xl shadow-black/5 '>
                             <Menu.Item>
                               <div className='w-full pointer-events-none'>
@@ -205,7 +197,7 @@ export default function Sidebar({
                             </Menu.Item>
                             <hr className='my-1 -mx-1' />
 
-                            {userNavigation.map((item) => (
+                            {/* {userNavigation.map((item) => (
                               <Link
                                 href={item.href}
                                 key={item.name}
@@ -218,7 +210,7 @@ export default function Sidebar({
                                 <span className=' ml-2'>{item.name}</span>
                               </Link>
                             ))}
-                            <hr className='my-1 -mx-1' />
+                            <hr className='my-1 -mx-1' /> */}
                             <Menu.Item>
                               {({ active }) => (
                                 <Button
@@ -238,7 +230,7 @@ export default function Sidebar({
                               )}
                             </Menu.Item>
                           </Menu.Items>
-                        </div>
+
                       </Transition>
                     </Menu>
                   </div>
