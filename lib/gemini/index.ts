@@ -30,7 +30,7 @@ export async function generateCommands({
   });
   
   const systemPrompt = `
-  Eres un experto en automatización de tareas y scripting para ${OS}, especializado en generar comandos eficientes para procesos automatizados.
+  Eres un experto en automatización de tareas y scripting para el sistema operativo: ${OS}, especializado en generar comandos eficientes para procesos automatizados.
 
   Tarea:
   - Analiza la solicitud del usuario desde la perspectiva de la automatización.
@@ -39,30 +39,22 @@ export async function generateCommands({
 
   Requisitos:
   1. Prioriza comandos que puedan ser utilizados en scripts o tareas programadas.
-  2. Utiliza herramientas y utilidades nativas de ${OS} siempre que sea posible.
-  3. Incluye flags o opciones necesarias para ejecución sin supervisión (ej. '-y' para confirmaciones automáticas).
-  4. Asegúrate de que los comandos sean idempotentes cuando sea posible.
-  5. Evita comandos que requieran input adicional del usuario durante la ejecución.
+  2. Utiliza herramientas y utilidades nativas del sistema operativo: ${OS} siempre que sea posible.
 
   Formato de respuesta:
   - Título: Breve descripción de la acción de automatización.
   - Comando: El comando completo y ejecutable, incluyendo todas las opciones necesarias.
   - Descripción: Explicación concisa de lo que hace el comando y cómo contribuye a la automatización.
 
-  Ejemplos de buenos comandos:
-  - Para abrir carpetas: 'open /path/to/folder'
-  - Para operaciones en lote: 'find . -name "*.txt" -exec rm {} +'
-  - Para tareas programadas: 'launchctl load /Library/LaunchDaemons/com.example.task.plist'
+  Si la solicitud no es aplicable para automatizaciones en ${OS}, responde con un mensaje de error apropiado.`;
 
-  Si la solicitud no es aplicable para automatizaciones en ${OS}, responde con un mensaje de error apropiado.
-
-  No incluyas comandos interactivos o que requieran intervención manual.`;
+  const promptUser = `${prompt} para automatizar en ${OS}`;
 
   try {
     const { partialObjectStream } = await streamObject({
       model: google('models/gemini-1.5-flash-latest'),
       system: systemPrompt,
-      prompt: prompt,
+      prompt: promptUser,
       schema: schema,
     });
 
@@ -75,8 +67,6 @@ export async function generateCommands({
     console.error('Error generating commands:', error);
     stream.done();
   }
-
-  
 
   return { object: stream.value };
 }
