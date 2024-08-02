@@ -42,7 +42,9 @@ export function CreateTokenModal({userId, title, description}: {userId: string, 
                 {description}
             </DialogDescription>
           </DialogHeader>
+
         <FormCreateToken userId={userId}/>
+
         </DialogContent>
       </Dialog>
     )
@@ -65,7 +67,7 @@ export function CreateTokenModal({userId, title, description}: {userId: string, 
             {description}
           </DrawerDescription>
         </DrawerHeader>
-        <FormCreateToken className=' px-4 pb-5' userId={userId}/>
+        <FormCreateToken className=' px-4 pb-10' userId={userId}/>
       </DrawerContent>
     </Drawer>
   )

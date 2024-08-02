@@ -14,8 +14,10 @@ import {
   LogOut,
   MenuIcon,
   MonitorSmartphone,
+  Settings2Icon,
   SquareTerminal,
   Terminal,
+  User2Icon,
   X
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -31,8 +33,8 @@ function classNames(...classes: string[]) {
 }
 
 const userNavigation = [
-  { name: 'Perfil', href: '/perfil', icon: Avatar },
-  { name: 'Configuración', href: '/configuracion', icon: Avatar }
+  { name: 'Perfil', href: '/perfil', icon: User2Icon },
+  { name: 'Configuración', href: '/configuracion', icon: Settings2Icon }
 ]
 
 const navigation = [
@@ -52,15 +54,15 @@ const history = [
 
 export function BreadcrumbNavbar({ isOpen }: { isOpen: boolean }) {
   return (
-    <div className='sticky  inset-x-0 top-0 z-0 border-y  px-4 sm:px-2 md:hidden md:px-4 lg:hidden bg-background text-foreground '>
+    <div className='sticky  inset-x-0 top-0 z-0 border-y  px-4 sm:px-2 md:hidden md:px-4 lg:hidden text-foreground '>
       <div className='flex items-center py-2'>
         <Disclosure.Button className='relative inline-flex items-center justify-center rounded-md p-2 text-gray-900 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-900 hover:text-black dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white'>
           <span className='absolute -inset-0.5' />
           <span className='sr-only'>Abrir el menu</span>
           {isOpen ? (
-            <X className='block h-5 w-5' aria-hidden='true' />
+            <X className='block size-5' aria-hidden='true' />
           ) : (
-            <MenuIcon className='block h-5 w-5' aria-hidden='true' />
+            <MenuIcon className='block size-5' aria-hidden='true' />
           )}
         </Disclosure.Button>
 
@@ -77,7 +79,7 @@ export function HiddenMenu() {
   const pathname = usePathname()
 
   return (
-    <Disclosure.Panel className='md:hidden bg-white dark:bg-gray-900'>
+    <Disclosure.Panel className='md:hidden border-b'>
       <div className='space-y-1 px-2 pb-3 pt-2'>
         {navigation.map((item) => (
           <Link
@@ -145,7 +147,7 @@ export default function Sidebar({
                       return (
                         label && (
                           <>
-                            <label.icon className='h-5 w-5' />
+                            <label.icon className='size-5' />
                             <span>{label.label}</span>
                           </>
                         )
@@ -209,10 +211,10 @@ export default function Sidebar({
                                 key={item.name}
                                 className={classNames(
                                   pathname === item.href ? 'bg-muted' : '',
-                                  'relative flex select-none items-center rounded-sm px-3 py-1.5   outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
+                                  'relative flex select-none items-center rounded-sm px-3 py-1.5 hover:bg-muted   outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
                                 )}
                               >
-                                <item.icon className='h-5 w-5' />
+                                <item.icon className='size-5 text-foreground' />
                                 <span className=' ml-2'>{item.name}</span>
                               </Link>
                             ))}

@@ -14,6 +14,7 @@ import {
   InputOTPSlot
 } from '@/components/ui/input-otp'
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from 'input-otp'
+import { cn } from '@/lib/utils'
 
 export default function FormCreateToken({
   userId,
@@ -67,7 +68,7 @@ export default function FormCreateToken({
 
   return (
 
-        <div className='flex flex-col gap-4'>
+        <div className={cn('flex flex-col gap-4', className)}>
           <div className='flex gap-2 justify-between relative items-center'>
             <span className=' w-full'></span>
             <InputOTP
@@ -76,6 +77,7 @@ export default function FormCreateToken({
               value={token || ''}
               disabled={isPending}
               pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+              className=''
             >
               <InputOTPGroup>
                 <InputOTPSlot index={0} />
@@ -86,12 +88,11 @@ export default function FormCreateToken({
                 <InputOTPSlot index={5} />
               </InputOTPGroup>
             </InputOTP>
-            <div className=' relative h-full w-full'>
-              
+            <div className=' relative items-center h-full  w-full'>
             <Button
               size={'icon'}
               variant='link'
-              className=' absolute left-0 top-0'
+              className=' absolute left-0 top-1/2 -translate-y-1/2'
               onClick={() => navigator.clipboard.writeText(token ?? '')}
               disabled={!token}
             >
