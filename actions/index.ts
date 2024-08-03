@@ -36,15 +36,13 @@ export async function InsertCommand({ data }: { data: CommandInsert }) {
 }
 
 export async function ExecuteCommand({
-  commandId,
-  userId
+  command
 }: {
-  commandId: string
-  userId: string
+  command: CommandHistoryInsert
 }) {
   const { error: commandError } = await supabase
     .from('command_history')
-    .insert({ command_id: commandId, user_id: userId })
+    .insert({ ...command })
 
   return { commandError }
 }

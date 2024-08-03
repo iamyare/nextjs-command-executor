@@ -13,10 +13,10 @@ import {
   getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table"
-import { ArrowUpDown, ChevronDown, MoreHorizontal, Play, Trash } from "lucide-react"
+import { ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -88,10 +88,10 @@ export const columns: ColumnDef<Command>[] = [
     },
   },
   {
-    accessorKey: "device",
+    accessorKey: "device_id",
     header: () => <div className=" ">Dispositivo</div>,
     cell: ({ row }) => {
-      return <div className=" max-w-[250px] overflow-hidden">{row.getValue("device")}</div>
+      return <div className=" max-w-[250px] overflow-hidden">{row.getValue("device_id")}</div>
     },
   },
   {
@@ -116,7 +116,7 @@ export const columns: ColumnDef<Command>[] = [
 
 
       return (
-        <ButtonExc id={row.original.id} name={row.original.name} />
+        <ButtonExc id={row.original.id} name={row.original.name} deviceId={row.original.device_id} />
       )
     },
   },

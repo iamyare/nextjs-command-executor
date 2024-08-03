@@ -13,6 +13,7 @@ export type Database = {
         Row: {
           command_id: string
           created_at: string
+          device_id: string | null
           id: string
           output: string | null
           status: string
@@ -22,6 +23,7 @@ export type Database = {
         Insert: {
           command_id: string
           created_at?: string
+          device_id?: string | null
           id?: string
           output?: string | null
           status?: string
@@ -31,6 +33,7 @@ export type Database = {
         Update: {
           command_id?: string
           created_at?: string
+          device_id?: string | null
           id?: string
           output?: string | null
           status?: string
@@ -46,6 +49,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "command_history_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "command_history_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -58,7 +68,7 @@ export type Database = {
         Row: {
           command: string
           created_at: string
-          device: string
+          device_id: string
           id: string
           name: string
           user_id: string
@@ -66,7 +76,7 @@ export type Database = {
         Insert: {
           command: string
           created_at?: string
-          device: string
+          device_id: string
           id?: string
           name: string
           user_id: string
@@ -74,12 +84,19 @@ export type Database = {
         Update: {
           command?: string
           created_at?: string
-          device?: string
+          device_id?: string
           id?: string
           name?: string
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "commands_device_id_fkey"
+            columns: ["device_id"]
+            isOneToOne: false
+            referencedRelation: "devices"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "commands_user_id_fkey"
             columns: ["user_id"]

@@ -6,7 +6,7 @@ import { Loader, Play } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useTransition } from 'react'
 
-export default function ButtonExc({ id, name }: { id: string; name: string }) {
+export default function ButtonExc({ id, name, deviceId }: { id: string; name: string, deviceId: string }) {
   const [isPeding, startTransition] = useTransition()
   const router = useRouter()
 
@@ -22,8 +22,11 @@ export default function ButtonExc({ id, name }: { id: string; name: string }) {
         return
       }
       const { commandError } = await ExecuteCommand({
-        commandId: id,
-        userId: user.id
+        command: {
+          command_id: id,
+          user_id: user.id,
+          device_id: deviceId
+        }
       })
       if (commandError) {
         toast({
