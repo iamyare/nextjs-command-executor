@@ -40,7 +40,7 @@ const FormSchema = z.object({
   command: z.string().min(1, {
     message: 'El código del comando es requerido'
   }),
-  device: z.string().min(1, {
+  device_id: z.string().min(1, {
     message: 'El dispositivo es requerido'
   }),
   user_id: z.string().min(1, {
@@ -64,7 +64,7 @@ export default function FormCreateCommand({
     defaultValues: {
       name: '',
       command: '',
-      device: '',
+      device_id: '',
       user_id: userId
     }
   })
@@ -139,7 +139,7 @@ export default function FormCreateCommand({
             >
               <FormField
                 control={form.control}
-                name='device'
+                name='device_id'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Dispositivo</FormLabel>
@@ -178,7 +178,7 @@ export default function FormCreateCommand({
         </AnimatePresence>
 
         <AnimatePresence>
-          {form.watch('device') && (
+          {form.watch('device_id') && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -205,7 +205,7 @@ export default function FormCreateCommand({
                         />
                       </div> */}
                       <IAFormInput field={field} watch={form.watch} osDevice={
-                        devices?.find((device) => device.id === form.watch('device'))?.os ?? ''
+                        devices?.find((device) => device.id === form.watch('device_id'))?.os ?? ''
                       } />
 
                     </FormControl>

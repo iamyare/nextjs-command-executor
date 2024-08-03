@@ -126,8 +126,11 @@ export const columns: ColumnDef<commandHistoryList>[] = [
 
         React.startTransition(async() => {
           const {commandError} = await ExecuteCommand({
-            commandId: row.original.id,
-            userId: '6428ab79-6446-4b1f-a968-6d2246426728'
+            command: {
+              command_id: row.original.id,
+              user_id: row.original.user_id,
+              device_id: row.original.device_id
+            }
           })
           if (commandError) {
              toast({
