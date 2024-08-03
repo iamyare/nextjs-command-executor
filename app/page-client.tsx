@@ -1,11 +1,12 @@
 'use client'
 import { GoogleButton } from '@/components/oauth-buttons'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import Link from 'next/link'
 
 export default function PageClient({user}:{user: User | null}) {
   return (
-    <main className='relative flex justify-center items-center   min-h-screen w-full   overflow-hidden '>
+    <main className='relative flex justify-center items-center min-h-dvh   md:min-h-screen w-full   overflow-hidden '>
       <div className='flex justify-center w-full p-10 gap-5 '>
         <section className='flex flex-col gap-5 max-w-sm max-h-[700px]'>
           <article className='flex h-full flex-col rounded-[30px] border border-muted/30 bg-background/30 px-6 pb-6'>
