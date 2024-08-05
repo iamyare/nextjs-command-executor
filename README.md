@@ -20,6 +20,19 @@ Commands Executor es una potente interfaz web para gestionar y crear comandos de
 - **Base de Datos:** Supabase
 - **Integración de IA:** SDK de Vercel para IA, API de Gemini de Google
 
+## Demos
+
+https://github.com/user-attachments/assets/39b23d3f-3bc1-4cf9-9a66-ccfc90f56467
+
+https://github.com/user-attachments/assets/e8beae5e-68c1-4870-b643-469ee4bfbad9
+
+https://github.com/user-attachments/assets/2591e6f3-1a44-4e4f-a814-cf8fb599b4e1
+
+https://github.com/user-attachments/assets/3e369c55-e760-4a62-a7b1-89ca0ee56811
+
+
+
+
 ## Instalación y Configuración
 
 1. Clonar el repositorio:
