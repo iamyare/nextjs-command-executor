@@ -1,10 +1,8 @@
 'use client'
 
-import { useCallback, useEffect, useState, useTransition } from 'react'
-import { Sparkles, Terminal } from 'lucide-react'
+import { useCallback, useEffect, useState } from 'react'
+import { Sparkles, Terminal, AlertTriangle } from 'lucide-react'
 import { Input } from './ui/input'
-
-
 import { AnimatePresence, motion } from 'framer-motion'
 import { generateCommands } from '@/lib/gemini'
 import { readStreamableValue } from 'ai/rsc'
@@ -25,12 +23,14 @@ type CommandAI = {
   id: string
   title: string
   command: string | null
+  description: string
 }
 
-export function IAFormInput({ field, watch,osDevice }: IAFormInputProps) {
+export function IAFormInput({ field, watch, osDevice }: IAFormInputProps) {
   const [open, setOpen] = useState(false)
-  const [isAIPending, startTransition] = useTransition()
+  const [isAIPending, setIsAIPending] = useState(false)
   const [commandAi, setCommandAi] = useState<CommandAI[] | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const commandValue = watch('command')
 
@@ -40,49 +40,49 @@ export function IAFormInput({ field, watch,osDevice }: IAFormInputProps) {
     } else {
       setCommandAi(null)
       setOpen(false)
+      setError(null)
     }
   }, [commandValue])
 
-  const promptAI = useCallback(() => {
+  const promptAI = useCallback(async () => {
     if (!commandValue.startsWith('#')) {
       return
     }
-  
-    startTransition(async () => {
-      const prompt = commandValue.slice(1)
-      const OS = osDevice 
 
-  
-      try {
-        const { object } = await generateCommands({
-          prompt,
-          OS,
-          apiKey: process.env.NEXT_PUBLIC_GEMINI_KEY ?? '',
-        })
+    setIsAIPending(true)
+    setError(null)
+    const prompt = commandValue.slice(1)
+    const OS = osDevice
 
-  
-        for await (const partialObject of readStreamableValue(object)) {
-          if (partialObject && partialObject.commands) {
-            const commandResponseObject = partialObject.commands.map((command: CommandAI, index: number) => ({
-              id: `command-${index}`,
-              title: command.title,
-              command: command.command,
-            }))
-            setCommandAi(commandResponseObject)
-            console.log('commandResponseObject', commandResponseObject)
-          }
+    try {
+      const { object } = await generateCommands({
+        prompt,
+        OS,
+        apiKey: process.env.NEXT_PUBLIC_GEMINI_KEY ?? '',
+      })
+
+      for await (const partialObject of readStreamableValue(object)) {
+        if (partialObject && partialObject.commands) {
+          const commandResponseObject = partialObject.commands.map((command: CommandAI, index: number) => ({
+            id: `command-${index}`,
+            title: command.title,
+            command: command.command,
+            description: command.description
+          }))
+          setCommandAi(commandResponseObject)
         }
-      } catch (error) {
-        console.error('Error generating commands:', error)
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
-        setCommandAi([{ id: 'error', title: errorMessage, command: null }])
       }
-    })
+    } catch (error) {
+      console.error('Error generating commands:', error)
+      setError('An error occurred while generating commands. Using fallback commands.')
+      // Aquí podrías establecer algunos comandos de fallback si lo deseas
+    } finally {
+      setIsAIPending(false)
+    }
   }, [commandValue, osDevice])
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      //Presionar control enter
       if (e.key === 'Enter') {
         e.preventDefault()
         promptAI()
@@ -110,14 +110,19 @@ export function IAFormInput({ field, watch,osDevice }: IAFormInputProps) {
             transition={{ duration: 0.3, ease: 'easeInOut' }}
           >
             <motion.div
-              key={commandAi ? 'commandAiTrue' : 'commandAiFalse'} // Cambia la key basada en el estado de commandAi
+              key={commandAi ? 'commandAiTrue' : 'commandAiFalse'}
               className='flex flex-col'
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }} // Agrega una animación de salida
+              exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.5 }}
             >
-              {commandAi ? (
+              {error ? (
+                <div className='flex items-center space-x-2 text-yellow-500'>
+                  <AlertTriangle className='size-4' />
+                  <p>{error}</p>
+                </div>
+              ) : commandAi ? (
                 <div className='flex flex-col space-y-2'>
                   {isAIPending ? (
                     <div className='flex items-center space-x-2'>
@@ -143,26 +148,25 @@ export function IAFormInput({ field, watch,osDevice }: IAFormInputProps) {
                     <ul>
                       {commandAi.map((command) => (
                         <motion.li
-                          key={command.id} // Asegúrate de usar un identificador único si está disponible, en lugar de index
+                          key={command.id}
                           initial={{ opacity: 0, x: -50 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 50 }}
                           transition={{ duration: 0.3 }}
-                          className={`flex w-full relative overflow-hidden group flex-col rounded-md px-2 py-2 hover:bg-accent/50 cursor-pointer ${
-                            command.id === 'error' ? 'is-error' : ''
-                          }`}
+                          className={`flex w-full relative overflow-hidden group flex-col rounded-md px-2 py-2 hover:bg-accent/50 cursor-pointer`}
                           onClick={() => {
                             field.onChange(command.command ?? '')
                             setOpen(false)
                           }}
                         >
-                          <h4 className='font-medium text-foreground group-[.is-error]:text-destructive'>
+                          <h4 className='font-medium text-foreground'>
                             {command.title}
                           </h4>
-                          <p className='text-muted-foreground inline-block text-sm w-full truncate group-[.is-error]:hidden'>
+                          <p className='text-muted-foreground inline-block text-sm w-full truncate'>
                             <Terminal className='inline-block size-4 mr-1' />
                             {command.command}
                           </p>
+                          <p className='text-muted-foreground text-xs mt-1'>{command.description}</p>
                           <div className='absolute inset-0 flex h-full w-full justify-center [transform:skew(-12deg)_translateX(-100%)] group-hover:duration-1000 group-hover:[transform:skew(-12deg)_translateX(100%)]'>
                             <div className='relative blur-lg h-full w-8 bg-foreground/20'></div>
                           </div>

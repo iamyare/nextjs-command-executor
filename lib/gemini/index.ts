@@ -1,9 +1,22 @@
 'use server';
 
+import { streamObject } from 'ai';
 import { createGoogleGenerativeAI } from '@ai-sdk/google';
 import { createStreamableValue } from 'ai/rsc';
 import { z } from 'zod';
-import { streamObject } from 'ai';
+
+const fallbackCommands = [
+  {
+    title: "Fallback Command 1",
+    command: "echo 'This is a fallback command'",
+    description: "This is a fallback command due to an API error."
+  },
+  {
+    title: "Fallback Command 2",
+    command: "printf 'Another fallback command'",
+    description: "This is another fallback command due to an API error."
+  }
+];
 
 export async function generateCommands({
   prompt,
@@ -50,23 +63,27 @@ export async function generateCommands({
 
   const promptUser = `${prompt} para automatizar en ${OS}`;
 
-  try {
-    const { partialObjectStream } = await streamObject({
-      model: google('models/gemini-1.5-flash-latest'),
-      system: systemPrompt,
-      prompt: promptUser,
-      schema: schema,
-    });
+  (async () => {
+    try {
+      const { partialObjectStream } = await streamObject({
+        model: google('models/gemini-1.5-flash-latest'),
+        system: systemPrompt,
+        prompt: promptUser,
+        schema: schema,
+      });
 
-    for await (const partialObject of partialObjectStream) {
-      stream.update(partialObject);
+      for await (const partialObject of partialObjectStream) {
+        stream.update(partialObject);
+      }
+
+      stream.done();
+    } catch (error) {
+      console.error('Error generating commands:', error);
+      // En caso de error, usamos los comandos de fallback
+      stream.update({ commands: fallbackCommands });
+      stream.done();
     }
-
-    stream.done();
-  } catch (error) {
-    console.error('Error generating commands:', error);
-    stream.done();
-  }
+  })();
 
   return { object: stream.value };
 }
