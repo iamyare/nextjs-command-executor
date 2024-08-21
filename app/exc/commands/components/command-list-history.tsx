@@ -221,9 +221,9 @@ export function CommandListHistory({data}:{data: commandHistoryList[]}) {
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter Nombre..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("commandName")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("name")?.setFilterValue(event.target.value)
+            table.getColumn("commandName")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -297,7 +297,7 @@ export function CommandListHistory({data}:{data: commandHistoryList[]}) {
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No se encontraron resultados
                 </TableCell>
               </TableRow>
             )}
