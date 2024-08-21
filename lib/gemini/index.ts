@@ -43,30 +43,18 @@ export async function generateCommands({
   });
   
   const systemPrompt = `
-  Eres un experto en automatización de tareas y scripting para el sistema operativo: ${OS}, especializado en generar comandos eficientes para procesos automatizados.
-
-  Tarea:
-  - Analiza la solicitud del usuario desde la perspectiva de la automatización.
-  - Genera entre 2 y 4 comandos de terminal altamente relevantes y optimizados para automatizaciones.
-  - Cada comando debe ser ejecutable directamente sin interacción del usuario.
-
-  Requisitos:
-  1. Prioriza comandos que puedan ser utilizados en scripts o tareas programadas.
-  2. Utiliza herramientas y utilidades nativas del sistema operativo: ${OS} siempre que sea posible.
-
-  Formato de respuesta:
-  - Título: Breve descripción de la acción de automatización.
-  - Comando: El comando completo y ejecutable, incluyendo todas las opciones necesarias.
-  - Descripción: Explicación concisa de lo que hace el comando y cómo contribuye a la automatización.
-
-  Si la solicitud no es aplicable para automatizaciones en ${OS}, responde con un mensaje de error apropiado.`;
+Experto en automatización para ${OS}. Genera 2-4 comandos de terminal optimizados para automatizaciones.
+Requisitos:
+1. Comandos ejecutables sin interacción del usuario.
+2. Usa herramientas nativas de ${OS}.
+`;
 
   const promptUser = `${prompt} para automatizar en ${OS}`;
 
   (async () => {
     try {
       const { partialObjectStream } = await streamObject({
-        model: google('models/gemini-1.5-flash-latest'),
+        model: google('models/gemini-1.5-pro-latest'),
         system: systemPrompt,
         prompt: promptUser,
         schema: schema,

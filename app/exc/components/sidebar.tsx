@@ -16,7 +16,6 @@ import {
   MonitorSmartphone,
   Settings2Icon,
   SquareTerminal,
-  Terminal,
   User2Icon,
   X
 } from 'lucide-react'
@@ -27,6 +26,7 @@ import { Titles } from '@/lib/data'
 import { signOut } from '@/actions'
 import { ThemeToggle } from '@/components/theme-toggle'
 import CommandRecent from './command-recent'
+
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -107,6 +107,7 @@ export default function Sidebar({
   const [isOpen, setIsOpen] = React.useState(defaultOpen)
   const router = useRouter()
   const pathname = usePathname()
+
   return (
     <>
       <Disclosure as='header'>

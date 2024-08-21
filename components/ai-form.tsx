@@ -102,7 +102,7 @@ export function IAFormInput({ field, watch, osDevice }: IAFormInputProps) {
       <AnimatePresence>
         {open && (
           <motion.div
-            className='absolute bg-background/90 overflow-y-auto rounded-md max-h-[120px] p-4 w-full right-0 bottom-[45px]'
+            className='absolute bg-background/90 border border-border/50 overflow-y-auto rounded-md max-h-[120px] p-4 w-full right-0 bottom-[45px]'
             initial='hidden'
             animate='visible'
             exit='exit'
