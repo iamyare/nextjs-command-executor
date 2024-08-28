@@ -40,7 +40,26 @@ export const Icons = {
     </svg>
   ),
   facebook: (props: IconProps) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="url(#a)" height="1em" width="1em" {...props}><defs><linearGradient x1="50%" x2="50%" y1="97.078%" y2="0%" id="a"><stop offset="0%" stopColor="#0062E0" /><stop offset="100%" stopColor="#19AFFF" /></linearGradient></defs><path d="M15 35.8C6.5 34.3 0 26.9 0 18 0 8.1 8.1 0 18 0s18 8.1 18 18c0 8.9-6.5 16.3-15 17.8l-1-.8h-4l-1 .8z" /><path fill="#FFF" d="m25 23 .8-5H21v-3.5c0-1.4.5-2.5 2.7-2.5H26V7.4c-1.3-.2-2.7-.4-4-.4-4.1 0-7 2.5-7 7v4h-4.5v5H15v12.7c1 .2 2 .3 3 .3s2-.1 3-.3V23h4z" /></svg>
+    <svg
+      xmlns='http://www.w3.org/2000/svg'
+      viewBox='0 0 36 36'
+      fill='url(#a)'
+      height='1em'
+      width='1em'
+      {...props}
+    >
+      <defs>
+        <linearGradient x1='50%' x2='50%' y1='97.078%' y2='0%' id='a'>
+          <stop offset='0%' stopColor='#0062E0' />
+          <stop offset='100%' stopColor='#19AFFF' />
+        </linearGradient>
+      </defs>
+      <path d='M15 35.8C6.5 34.3 0 26.9 0 18 0 8.1 8.1 0 18 0s18 8.1 18 18c0 8.9-6.5 16.3-15 17.8l-1-.8h-4l-1 .8z' />
+      <path
+        fill='#FFF'
+        d='m25 23 .8-5H21v-3.5c0-1.4.5-2.5 2.7-2.5H26V7.4c-1.3-.2-2.7-.4-4-.4-4.1 0-7 2.5-7 7v4h-4.5v5H15v12.7c1 .2 2 .3 3 .3s2-.1 3-.3V23h4z'
+      />
+    </svg>
   ),
   gitHub: (props: IconProps) => (
     <svg viewBox='0 0 438.549 438.549' {...props}>
@@ -868,6 +887,17 @@ export const Icons = {
         clipRule='evenodd'
         d='M18.25 11.25C18.25 10.6977 18.6977 10.25 19.25 10.25H19.259C19.8113 10.25 20.259 10.6977 20.259 11.25C20.259 11.8023 19.8113 12.25 19.259 12.25H19.25C18.6977 12.25 18.25 11.8023 18.25 11.25Z'
       ></path>
+    </svg>
+  ),
+  windows: (props: IconProps) => (
+    <svg
+      viewBox='0 0 88 88'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
+      <path
+        d='m0 12.402 35.687-4.86.016 34.423-35.67.203zm35.67 33.529.028 34.453L.028 75.48.026 45.7zm4.326-39.025L87.314 0v41.527l-47.318.376zm47.329 39.349-.011 41.34-47.318-6.678-.066-34.739z'
+      />
     </svg>
   )
 }

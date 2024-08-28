@@ -19,30 +19,36 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from '@/components/ui/drawer'
-import {  Plus } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import FormCreateCommand from '@/components/form-create-command'
 
-export function CreateCommandModal({userId, title, description}: {userId: string, title: string, description: string}) {
+export function CreateCommandModal({
+  userId,
+  title,
+  description
+}: {
+  userId: string
+  title: string
+  description: string
+}) {
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery('(min-width: 600px)')
 
   if (isDesktop) {
     return (
-      <Dialog  open={open} onOpenChange={setOpen}>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-        <Button variant={'outline'} type='submit'>
-          <Plus className='size-4 mr-2' />
-          Crear comando
-        </Button>
+          <Button variant={'outline'} type='submit'>
+            <Plus className='size-4 mr-2' />
+            Crear comando
+          </Button>
         </DialogTrigger>
         <DialogContent className=' max-w-lg '>
           <DialogHeader>
             <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>
-                {description}
-            </DialogDescription>
+            <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-        <FormCreateCommand userId={userId}/>
+          <FormCreateCommand userId={userId} setOpen={setOpen} />
         </DialogContent>
       </Dialog>
     )
@@ -51,24 +57,22 @@ export function CreateCommandModal({userId, title, description}: {userId: string
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant={'outline'}  type='submit'>
+        <Button variant={'outline'} type='submit'>
           <Plus className='size-4 mr-2' />
           Crear comando
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className='text-left'>
-          <DrawerTitle>
-            {title}
-          </DrawerTitle>
-          <DrawerDescription>
-            {description}
-          </DrawerDescription>
+          <DrawerTitle>{title}</DrawerTitle>
+          <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        <FormCreateCommand className=' px-4 pb-5' userId={userId}/>
-
+        <FormCreateCommand
+          className=' px-4 pb-5'
+          userId={userId}
+          setOpen={setOpen}
+        />
       </DrawerContent>
     </Drawer>
   )
 }
-

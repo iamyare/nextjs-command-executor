@@ -2,6 +2,7 @@ import React from 'react'
 import Sidebar from './components/sidebar'
 import { cookies } from 'next/headers'
 import { getLastCommands, getUserSession } from '@/actions'
+import Alert from './components/alert'
 
 export default async function layout({
   children
@@ -17,10 +18,10 @@ export default async function layout({
   const { user, error } = await getUserSession()
 
   if (error) {
-    console.log(error)
+    return <Alert message={error.message} errorCode={error.code} />
   }
   if (!user) {
-    return null
+    return <Alert message='No se pudo obtener la información del usuario' errorCode={'No se pudo obtener la información'} />
   }
 
   const { commands, commandsError } = await getLastCommands({ userId: user.id })

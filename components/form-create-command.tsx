@@ -50,10 +50,12 @@ const FormSchema = z.object({
 
 export default function FormCreateCommand({
   userId,
+  setOpen,
   className
 }: {
   userId: string
   className?: string
+  setOpen?: (open: boolean) => void
 }) {
   const [isPeding, startTransition] = useTransition()
   const router = useRouter()
@@ -89,18 +91,23 @@ export default function FormCreateCommand({
         console.log(commandInsertError)
         toast({
           variant: 'destructive',
-          title: 'Uh oh! Something went wrong.',
-          description: 'There was a problem with your request.'
+          title: '¡Oh no! Algo salió mal.',
+          description: 'Hubo un problema con tu solicitud.'
         })
         return undefined
       }
 
       form.reset()
       router.refresh()
+
+      if (setOpen) {
+        setOpen(false)
+      }
+
       toast({
         variant: 'default',
-        title: 'Command created',
-        description: `The command ${data.name} has been created.`
+        title: 'Comando creado',
+        description: `El comando ${data.name} ha sido creado.`
       })
     })
   }
@@ -210,9 +217,9 @@ export default function FormCreateCommand({
 
                     </FormControl>
                     <FormDescription>
-                      Este es el código que se ejecutará cuando se invoque el
-                      comando.
-                    </FormDescription>
+                Este es el comando que se ejecutará en el dispositivo. <br />
+                <span className=' font-semibold'>(Presione # para activar la IA)</span>
+              </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}

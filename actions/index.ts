@@ -35,6 +35,13 @@ export async function InsertCommand({ data }: { data: CommandInsert }) {
   return { commandInsertResult, commandInsertError }
 }
 
+export async function UpdateCommand({ data }: { data: CommnadUpdate }) {
+  const { data: commandUpdateResult, error: commandUpdateError } =
+    await supabase.from('commands').update({ ...data }).eq('id', data.id ?? '')
+
+  return { commandUpdateResult, commandUpdateError }
+}
+
 export async function ExecuteCommand({
   command
 }: {
