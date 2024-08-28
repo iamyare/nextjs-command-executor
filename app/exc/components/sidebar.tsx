@@ -27,16 +27,13 @@ import { Titles } from '@/lib/data'
 import { signOut } from '@/actions'
 import { ThemeToggle } from '@/components/theme-toggle'
 import CommandRecent from './command-recent'
+import { ConfigModal } from './modal-config'
 
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-const userNavigation = [
-  { name: 'Perfil', href: '/perfil', icon: User2Icon },
-  { name: 'Configuración', href: '/configuracion', icon: Settings2Icon }
-]
 
 const navigation = [
   { name: 'Dashboard', href: '/exc', icon: Gauge },
@@ -216,20 +213,7 @@ export default function Sidebar({
 
 <Menu.Item>
                               {({ active }) => (
-                                <Button
-                                  variant={'ghost'}
-                                  className={classNames(
-                                    active ? 'bg-muted-foreground/10 text-muted-forebg-muted-foreground' : '',
-                                    'relative flex justify-start select-none  items-center rounded-sm px-3 py-1.5  w-full outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
-                                  )}
-                                  onClick={async () => {
-                                    await signOut()
-                                    router.push('/')
-                                  }}
-                                >
-                                  <Settings className=' size-4' />
-                                  <span className=' ml-2'>Configuración</span>
-                                </Button>
+                                <ConfigModal userId={user.id} />
                               )}
                             </Menu.Item>
 
