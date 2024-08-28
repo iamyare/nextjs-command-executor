@@ -5,7 +5,6 @@ import { Sparkles, Terminal, AlertTriangle } from 'lucide-react'
 import { Input } from './ui/input'
 import { AnimatePresence, motion } from 'framer-motion'
 import { generateCommands } from '@/lib/gemini'
-import { readStreamableValue } from 'ai/rsc'
 
 type IAFormInputProps = {
   field: any
@@ -20,10 +19,9 @@ const variants = {
 }
 
 type CommandAI = {
-  id: string
-  title: string
-  command: string | null
-  description: string
+    title: string
+    command: string | null
+    description: string
 }
 
 export function IAFormInput({ field, watch, osDevice }: IAFormInputProps) {
@@ -55,23 +53,14 @@ export function IAFormInput({ field, watch, osDevice }: IAFormInputProps) {
     const OS = osDevice
 
     try {
-      const { object } = await generateCommands({
+      const { commandIA } = await generateCommands({
         prompt,
         OS,
         apiKey: process.env.NEXT_PUBLIC_GEMINI_KEY ?? '',
       })
 
-      for await (const partialObject of readStreamableValue(object)) {
-        if (partialObject && partialObject.commands) {
-          const commandResponseObject = partialObject.commands.map((command: CommandAI, index: number) => ({
-            id: `command-${index}`,
-            title: command.title,
-            command: command.command,
-            description: command.description
-          }))
-          setCommandAi(commandResponseObject)
-        }
-      }
+      console.log('commandIA:', commandIA)
+      setCommandAi(commandIA.commands)
     } catch (error) {
       console.error('Error generating commands:', error)
       setError('An error occurred while generating commands. Using fallback commands.')
@@ -146,9 +135,9 @@ export function IAFormInput({ field, watch, osDevice }: IAFormInputProps) {
 
                   <AnimatePresence>
                     <ul>
-                      {commandAi.map((command) => (
+                      {commandAi.map((command, index) => (
                         <motion.li
-                          key={command.id}
+                          key={index}
                           initial={{ opacity: 0, x: -50 }}
                           animate={{ opacity: 1, x: 0 }}
                           exit={{ opacity: 0, x: 50 }}
