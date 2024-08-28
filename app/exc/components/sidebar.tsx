@@ -1,5 +1,5 @@
 'use client'
-import { Disclosure, Menu, Transition } from '@headlessui/react'
+import { Disclosure, Menu, MenuButton, MenuItem, MenuItems, Transition } from '@headlessui/react'
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -14,6 +14,7 @@ import {
   LogOut,
   MenuIcon,
   MonitorSmartphone,
+  Settings,
   Settings2Icon,
   SquareTerminal,
   User2Icon,
@@ -26,16 +27,11 @@ import { Titles } from '@/lib/data'
 import { signOut } from '@/actions'
 import { ThemeToggle } from '@/components/theme-toggle'
 import CommandRecent from './command-recent'
-
+import { ConfigModal } from './modal-config'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
-
-const userNavigation = [
-  { name: 'Perfil', href: '/perfil', icon: User2Icon },
-  { name: 'Configuración', href: '/configuracion', icon: Settings2Icon }
-]
 
 const navigation = [
   { name: 'Dashboard', href: '/exc', icon: Gauge },
@@ -151,89 +147,73 @@ export default function Sidebar({
                   {/* Botones */}
                   <div className='flex flex-row items-center justify-end gap-2 '>
                     <ThemeToggle />
-
+              <ConfigModal userId={user.id} />
+                    
                     {/* Profile dropdown */}
                     <Menu as='div' className='relative'>
-                      <Menu.Button className='relative  rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2  ring-offset-background hover:ring-2 hover:ring-offset-2 hover:ring-muted'>
-                        <span className='absolute -inset-1.5' />
-                        <span className='sr-only'>Abrir Menu</span>
-                        <Avatar className='h-9 w-9'>
-                          <AvatarImage src={user.avatar_url ?? ''} />
-                          <AvatarFallback>
-                            {user.full_name.charAt(0).toUpperCase()}
-                          </AvatarFallback>
-                        </Avatar>
-                        {/* <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" /> */}
-                      </Menu.Button>
-                      <Transition
-                        as={Fragment}
-                        enter='transition ease-out duration-100'
-                        enterFrom='transform opacity-0 scale-95'
-                        enterTo='transform opacity-100 scale-100'
-                        leave='transition ease-in duration-75'
-                        leaveFrom='transform opacity-100 scale-100'
-                        leaveTo='transform opacity-0 scale-95'
-                      >
+        <MenuButton className='relative rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 ring-offset-background hover:ring-2 hover:ring-offset-2 hover:ring-muted'>
+          <span className='absolute -inset-1.5' />
+          <span className='sr-only'>Abrir Menu</span>
+          <Avatar className='h-9 w-9'>
+            <AvatarImage src={user.avatar_url ?? ''} />
+            <AvatarFallback>
+              {user.full_name.charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        </MenuButton>
+        <Transition
+          as={Fragment}
+          enter='transition ease-out duration-100'
+          enterFrom='transform opacity-0 scale-95'
+          enterTo='transform opacity-100 scale-100'
+          leave='transition ease-in duration-75'
+          leaveFrom='transform opacity-100 scale-100'
+          leaveTo='transform opacity-0 scale-95'
+        >
+          <MenuItems className='absolute right-0 z-50 mt-2 w-60 origin-top-right rounded-md bg-popover border p-1 shadow-xl shadow-black/5 '>
+            <MenuItem>
+              <div className='w-full pointer-events-none'>
+                <div className='flex items-center gap-2 p-1'>
+                  <Avatar>
+                    <AvatarImage src={user.avatar_url ?? ''} />
+                    <AvatarFallback>
+                      {user.full_name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className='w-full overflow-hidden'>
+                    <p className='text-sm font-semibold truncate w-full '>
+                      {user.full_name}
+                    </p>
+                    <p className='text-xs truncate w-full text-muted-foreground'>
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </MenuItem>
+            <hr className='my-1 -mx-1' />
 
-                          <Menu.Items className='absolute right-0 z-50 mt-2 w-60 origin-top-right rounded-md bg-popover border p-1 shadow-xl shadow-black/5 '>
-                            <Menu.Item>
-                              <div className='w-full pointer-events-none'>
-                                <div className='flex items-center gap-2 p-1'>
-                                  <Avatar>
-                                    <AvatarImage src={user.avatar_url ?? ''} />
-                                    <AvatarFallback>
-                                      {user.full_name.charAt(0).toUpperCase()}
-                                    </AvatarFallback>
-                                  </Avatar>
-                                  <div className='w-full  overflow-hidden'>
-                                    <p className='text-sm font-semibold truncate w-full '>
-                                      {user.full_name}
-                                    </p>
-                                    <p className='text-xs truncate w-full  text-muted-foreground'>
-                                      {user.email}
-                                    </p>
-                                  </div>
-                                </div>
-                              </div>
-                            </Menu.Item>
-                            <hr className='my-1 -mx-1' />
-
-                            {/* {userNavigation.map((item) => (
-                              <Link
-                                href={item.href}
-                                key={item.name}
-                                className={classNames(
-                                  pathname === item.href ? 'bg-muted' : '',
-                                  'relative flex select-none items-center rounded-sm px-3 py-1.5 hover:bg-muted   outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
-                                )}
-                              >
-                                <item.icon className='size-5 text-foreground' />
-                                <span className=' ml-2'>{item.name}</span>
-                              </Link>
-                            ))}
-                            <hr className='my-1 -mx-1' /> */}
-                            <Menu.Item>
-                              {({ active }) => (
-                                <Button
-                                  variant={'ghost'}
-                                  className={classNames(
-                                    active ? 'bg-red-500/10 text-red-500' : '',
-                                    'relative flex justify-start select-none hover:bg-red-500/10 hover:text-red-500 items-center rounded-sm px-3 py-1.5  w-full outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
-                                  )}
-                                  onClick={async () => {
-                                    await signOut()
-                                    router.push('/')
-                                  }}
-                                >
-                                  <LogOut className='h-5 w-5' />
-                                  <span className=' ml-2'>Cerrar Sesión</span>
-                                </Button>
-                              )}
-                            </Menu.Item>
-                          </Menu.Items>
-
-                      </Transition>
-                    </Menu>
+            <MenuItem>
+              {({ focus }) => (
+                <Button
+                  variant={'ghost'}
+                  className={classNames(
+                    focus ? 'bg-red-500/10 text-red-500' : '',
+                    'relative flex justify-start select-none hover:bg-red-500/10 hover:text-red-500 items-center rounded-sm px-3 py-1.5 w-full outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
+                  )}
+                  onClick={async () => {
+                    await signOut();
+                    router.push('/');
+                  }}
+                >
+                  <LogOut className='size-4' />
+                  <span className='ml-2'>Cerrar Sesión</span>
+                </Button>
+              )}
+            </MenuItem>
+          </MenuItems>
+        </Transition>
+      </Menu>
                   </div>
                 </div>
               </div>
@@ -301,7 +281,7 @@ export default function Sidebar({
                       </ul>
                       <Separator className='my-4' />
                       <h3 className='text-sm'>Comandos Recientes</h3>
-                        <CommandRecent lastCommands={lastCommands} />
+                      <CommandRecent lastCommands={lastCommands} />
                     </>
                   ) : (
                     <ul className='grid space-y-2'>

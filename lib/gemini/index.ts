@@ -53,11 +53,13 @@ export async function generateCommands({
   })
 
   const systemPrompt = `
-Experto en automatización para ${OS}. Genera 2-4 comandos de terminal optimizados para automatizaciones.
-Requisitos:
-1. Comandos ejecutables sin interacción del usuario.
-2. Usa herramientas nativas de ${OS}.
-`
+    Eres un experto en automatización para ${OS}. Tu tarea es generar entre 2 y 4 comandos de terminal optimizados para automatizaciones. 
+    Requisitos:
+    1. Los comandos deben ser ejecutables sin necesidad de interacción del usuario.
+    2. Utiliza únicamente herramientas nativas de ${OS}.
+    3. Algunos comandos deben combinarse en una sola línea utilizando operadores como && o ;. Por ejemplo: open https://www.netflix.com/ && osascript -e "set volume output volume 50".
+    4. Asegúrate de que los comandos sean eficientes y claros.
+    `
 
   const promptUser = `${prompt} para automatizar en ${OS}`
 

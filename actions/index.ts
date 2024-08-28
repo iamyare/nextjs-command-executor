@@ -35,6 +35,13 @@ export async function InsertCommand({ data }: { data: CommandInsert }) {
   return { commandInsertResult, commandInsertError }
 }
 
+export async function UpdateCommand({ data }: { data: CommnadUpdate }) {
+  const { data: commandUpdateResult, error: commandUpdateError } =
+    await supabase.from('commands').update({ ...data }).eq('id', data.id ?? '')
+
+  return { commandUpdateResult, commandUpdateError }
+}
+
 export async function ExecuteCommand({
   command
 }: {
@@ -93,6 +100,16 @@ export async function getUserSession() {
     .single()
 
   return { user: user, error: userError }
+}
+
+export async function getUserSingle({ userId }: { userId: string }) {
+  const { data: user, error: userError } = await supabase
+  .from('users')
+  .select('*')
+  .eq('id', userId)
+  .single()
+
+return { user: user, error: userError }
 }
 
 export async function deleteCommandById({ commandId }: { commandId: string }) {

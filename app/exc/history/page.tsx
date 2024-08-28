@@ -16,7 +16,7 @@ export default async function HistoryPage() {
 
   return (
     <main className=''>
-      <HeadersContent title='Historial de ejecuciones' description='Aquí puedes ver todas las ejecuciones que has realizado.' />
+      <HeadersContent title='Historial de ejecuciones' description={'Historial de los comandos ejecutados por el usuario'} />
       <CommandListHistory data={commands} />
     </main>
   )

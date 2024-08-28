@@ -1,6 +1,4 @@
 'use client'
-import * as React from 'react'
-
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { Button } from '@/components/ui/button'
 import {
@@ -19,28 +17,32 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from '@/components/ui/drawer'
-import { Plus } from 'lucide-react'
-import FormCreateCommand from '@/components/form-create-command'
+import { Settings } from 'lucide-react'
+import TabsConf from './tabs-conf'
+import { useState } from 'react'
 
-export function CreateCommandModal({
+  const title = 'Configuración'
+  const description = 'Configuración de la cuenta'
+
+export function ConfigModal({
   userId,
-  title,
-  description
+
 }: {
   userId: string
-  title: string
-  description: string
 }) {
-  const [open, setOpen] = React.useState(false)
+
+  const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 600px)')
 
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant={'outline'} type='submit'>
-            <Plus className='size-4 mr-2' />
-            Crear comando
+          <Button
+            variant={'ghost'}
+            size={'icon'}
+          >
+            <Settings className=' size-5' />
           </Button>
         </DialogTrigger>
         <DialogContent className=' max-w-lg '>
@@ -48,7 +50,7 @@ export function CreateCommandModal({
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <FormCreateCommand userId={userId} setOpen={setOpen} />
+          <TabsConf setOpen={setOpen} userId={userId} />
         </DialogContent>
       </Dialog>
     )
@@ -57,21 +59,19 @@ export function CreateCommandModal({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant={'outline'} type='submit'>
-          <Plus className='size-4 mr-2' />
-          Crear comando
-        </Button>
+      <Button
+            variant={'ghost'}
+            size={'icon'}
+          >
+            <Settings className=' size-5' />
+          </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className='text-left'>
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        <FormCreateCommand
-          className=' px-4 pb-5'
-          userId={userId}
-          setOpen={setOpen}
-        />
+        <TabsConf setOpen={setOpen} userId={userId} />
       </DrawerContent>
     </Drawer>
   )

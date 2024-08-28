@@ -21,7 +21,7 @@ export default async function CommandsPage() {
     <main className=''>
       <HeadersContent className='flex flex-row justify-between items-center w-full'
         title='Dispositivos'
-        description='Aquí puedes ver todos los dispositivos que has registrado.'
+        description='Lista de dispositivos asociados a su cuenta.'
       >
       <CreateTokenModal
           title={'Token generado'}

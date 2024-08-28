@@ -14,7 +14,7 @@ import {
   FormMessage
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast } from './ui/use-toast'
 import { cn } from '@/lib/utils'
@@ -27,6 +27,7 @@ import {
 } from './ui/select'
 import { IAFormInput } from './ai-form'
 import { Loader, PenLine } from 'lucide-react'
+import { getDevicesByUser, UpdateCommand } from '@/actions'
 
 const FormSchema = z.object({
   name: z.string().min(1, {
@@ -35,18 +36,22 @@ const FormSchema = z.object({
   command: z.string().min(1, {
     message: 'El código del comando es requerido'
   }),
-  device: z.string().min(1, {
+  device_id: z.string().min(1, {
     message: 'El dispositivo es requerido'
   }),
   id: z.string().min(1, {
     message: 'No hay un id'
-  })
+  }),
+
 })
 
 interface UpdateCommandModal {
   commandID: string
   commandName: string
   command: string
+  commandDevice: string
+  userId: string
+  setOpen: (open: boolean) => void
   className?: string
 }
 
@@ -54,9 +59,13 @@ export default function FormEditCommand({
   commandID,
   commandName,
   command,
-  className
+  className,
+  commandDevice,
+  userId,
+  setOpen
 }: UpdateCommandModal) {
   const [isPeding, startTransition] = useTransition()
+  const [devices, setDevices] = useState<Device[] | null>([])
   const router = useRouter()
 
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -65,18 +74,41 @@ export default function FormEditCommand({
       id: commandID,
       name: commandName,
       command: command,
-      device: ''
+      device_id: commandDevice,
     }
   })
 
+  useEffect(() => {
+    async function getDevices() {
+      const {devices, devicesError} = await getDevicesByUser({ userId: userId })
+      if (devicesError) {
+        console.log(devicesError)
+        return
+      }
+      setDevices(devices)
+    }
+    getDevices()
+  }, [userId])
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     startTransition(async () => {
+      const { commandUpdateError } = await UpdateCommand({ data: data })
+      if (commandUpdateError) {
+        console.log(commandUpdateError)
+        toast({
+          variant: 'destructive',
+          title: 'Error al actualizar el comando',
+          description: 'Hubo un error al actualizar el comando. Por favor, intente de nuevo.'
+        })
+        return
+      }
       form.reset()
       router.refresh()
+      setOpen(false)
       toast({
         variant: 'default',
-        title: 'Command Updated',
-        description: `The command ${data.name} has been updated.`
+        title: 'Comando Actualizado',
+        description: `El comando ${data.name} ha sido actualizado.`
       })
     })
   }
@@ -106,7 +138,7 @@ export default function FormEditCommand({
 
         <FormField
           control={form.control}
-          name='device'
+          name='device_id'
           render={({ field }) => (
             <FormItem>
               <FormLabel>Dispositivo</FormLabel>
@@ -117,8 +149,20 @@ export default function FormEditCommand({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value='id21321'>Mackbook Air de Yamir</SelectItem>
-                  <SelectItem value='id217362781'>PC-Station</SelectItem>
+                {
+                          devices ? (
+
+                            devices?.map((device) => (
+                              <SelectItem value={device.id} key={device.id}>
+                                {device.name} - <span className='text-muted-foreground'>{device.os}</span>
+                              </SelectItem>
+                            ))
+                          ):(
+                            <SelectItem value='loading'>
+                              Cargando dispositivos...
+                            </SelectItem>
+                          )
+                        }
                 </SelectContent>
               </Select>
               <FormMessage />
@@ -144,11 +188,12 @@ export default function FormEditCommand({
                 <IAFormInput
                   field={field}
                   watch={form.watch}
-                  osDevice={form.watch('device')}
+                  osDevice={form.watch('device_id')}
                 />
               </FormControl>
               <FormDescription>
-                Este es el código que se ejecutará cuando se invoque el comando.
+                Este es el comando que se ejecutará en el dispositivo. <br />
+                <span className=' font-semibold'>(Presione # para activar la IA)</span>
               </FormDescription>
               <FormMessage />
             </FormItem>

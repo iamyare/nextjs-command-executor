@@ -1,5 +1,6 @@
 import { getUserSession } from "@/actions";
 import CreateCommand from "./components/create-command";
+import Suggestions from "./components/suggestions";
 
 
 export default async function DashboardPage() {
@@ -14,7 +15,9 @@ export default async function DashboardPage() {
 
 
   return (
-    <main className=''>
+    <main className='flex flex-col gap-2'>
+
+      <Suggestions />
         <CreateCommand userId={user.id} />
         
     </main>
