@@ -1,6 +1,4 @@
 'use client'
-import * as React from 'react'
-
 import { useMediaQuery } from '@/hooks/use-media-query'
 import { Button } from '@/components/ui/button'
 import {
@@ -21,6 +19,10 @@ import {
 } from '@/components/ui/drawer'
 import { Settings } from 'lucide-react'
 import TabsConf from './tabs-conf'
+import { useState } from 'react'
+
+  const title = 'Configuración'
+  const description = 'Configuración de la cuenta'
 
 export function ConfigModal({
   userId,
@@ -28,9 +30,8 @@ export function ConfigModal({
 }: {
   userId: string
 }) {
-  const title = 'Configuración'
-  const description = 'Configuración de la cuenta'
-  const [open, setOpen] = React.useState(false)
+
+  const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 600px)')
 
   if (isDesktop) {
@@ -57,7 +58,7 @@ export function ConfigModal({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger>
+      <DrawerTrigger asChild>
       <Button
             variant={'ghost'}
             size={'icon'}

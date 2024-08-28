@@ -1,3 +1,4 @@
+'use client'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import AccountTabs from './tabs-config/account'
 import APITabs from './tabs-config/api'
