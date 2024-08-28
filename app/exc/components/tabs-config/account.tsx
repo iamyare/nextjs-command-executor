@@ -16,13 +16,17 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
 import { Separator } from '@/components/ui/separator'
-import { useEffect, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 import { getUserSingle } from '@/actions'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { Label } from '@/components/ui/label'
 
 const FormSchema = z.object({
   full_name: z.string().min(2, {
     message: 'Username must be at least 2 characters.'
-  })
+  }),
+  avatar_url: z.optional(z.string()),
+  email: z.string().email({ message: 'Invalid email address.' })
 })
 
 export default function AccountTabs({
@@ -32,27 +36,33 @@ export default function AccountTabs({
   userId: string
   setOpen: (open: boolean) => void
 }) {
+  const [user, setUser] = useState<User | null>(null)
   const [isPending, startTransition] = useTransition()
   const [isLoading, startLoading] = useTransition()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      full_name: ''
+      full_name: '',
+      avatar_url: '',
+      email: ''
     }
   })
 
   useEffect(() => {
     startLoading(async() => {
-      const {user, error} = await getUserSingle({userId})
+      const {user:userFetch, error} = await getUserSingle({userId})
       if (error){
         return console.log(error)
       }
-      if (!user){
+      if (!userFetch){
         return console.log('No hay usuario')
       }
+      setUser(userFetch)
+      form.setValue('full_name', userFetch.full_name)
+      form.setValue('avatar_url', userFetch.avatar_url ?? '')
+      form.setValue('email', userFetch.email)
 
-      form.setValue('full_name', user.full_name)
     })
   }, [form, userId])
     
@@ -84,8 +94,43 @@ export default function AccountTabs({
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className='w-full space-y-6'
+          className='w-full space-y-2'
         >
+
+      <div className=' space-y-2'>
+        <Label>Avatar</Label>
+      <div className=' flex gap-2 w-full'>
+
+<Avatar>
+<AvatarImage src={user?.avatar_url ?? ''} alt="@shadcn" />
+<AvatarFallback>
+  {user?.full_name[0]}
+</AvatarFallback>
+</Avatar>
+
+<FormField
+  control={form.control}
+  name="avatar_url"
+  render={({ field }) => (
+    <FormItem className="w-full">
+      <FormControl>
+        <Input
+          placeholder="Avatar"
+          type="file"
+          disabled={true}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            field.onChange(file ? file.name : "");
+          }}
+        />
+      </FormControl>
+      <FormMessage />
+    </FormItem>
+  )}
+/>
+</div>
+      </div>
+
           <FormField
             control={form.control}
             name='full_name'
@@ -99,6 +144,23 @@ export default function AccountTabs({
               </FormItem>
             )}
           />
+
+
+
+<FormField
+            control={form.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Correo Electronico</FormLabel>
+                <FormControl>
+                  <Input placeholder='info@iamyare.com' disabled={true} {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <div className=' w-full flex justify-end'>
             <Button type='submit' className='glow text-white'>
               {isPending ? 'Guardando...' : 'Guardar'}
