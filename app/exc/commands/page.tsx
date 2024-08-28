@@ -23,7 +23,7 @@ export default async function CommandsPage() {
     <main className=''>
       <HeadersContent className='flex flex-row justify-between items-center w-full'
         title='Comandos'
-        description='Aquí puedes ver todos los comandos que has creado.'
+        description='Lista de comandos asociados a su cuenta.'
       >
         <CreateCommandModal
           title={'Crear comando'}

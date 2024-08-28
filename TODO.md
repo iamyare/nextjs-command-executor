@@ -1,0 +1,5 @@
+- [ ] Editar el modal de edición de comandos
+- [ ] Agregar un modal para la API key de Google
+- [ ] Mejorar el texto de la aplicación
+- [ ] Agregar más interacciones en el dashboard
+- [ ] Solucionar: `AuthSessionMissingError: Auth session missing!`

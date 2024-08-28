@@ -14,6 +14,7 @@ import {
   LogOut,
   MenuIcon,
   MonitorSmartphone,
+  Settings,
   Settings2Icon,
   SquareTerminal,
   User2Icon,
@@ -212,6 +213,26 @@ export default function Sidebar({
                               </Link>
                             ))}
                             <hr className='my-1 -mx-1' /> */}
+
+<Menu.Item>
+                              {({ active }) => (
+                                <Button
+                                  variant={'ghost'}
+                                  className={classNames(
+                                    active ? 'bg-muted-foreground/10 text-muted-forebg-muted-foreground' : '',
+                                    'relative flex justify-start select-none  items-center rounded-sm px-3 py-1.5  w-full outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
+                                  )}
+                                  onClick={async () => {
+                                    await signOut()
+                                    router.push('/')
+                                  }}
+                                >
+                                  <Settings className=' size-4' />
+                                  <span className=' ml-2'>Configuración</span>
+                                </Button>
+                              )}
+                            </Menu.Item>
+
                             <Menu.Item>
                               {({ active }) => (
                                 <Button
@@ -225,7 +246,7 @@ export default function Sidebar({
                                     router.push('/')
                                   }}
                                 >
-                                  <LogOut className='h-5 w-5' />
+                                  <LogOut className=' size-4' />
                                   <span className=' ml-2'>Cerrar Sesión</span>
                                 </Button>
                               )}
