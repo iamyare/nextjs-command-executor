@@ -102,6 +102,16 @@ export async function getUserSession() {
   return { user: user, error: userError }
 }
 
+export async function getUserSingle({ userId }: { userId: string }) {
+  const { data: user, error: userError } = await supabase
+  .from('users')
+  .select('*')
+  .eq('id', userId)
+  .single()
+
+return { user: user, error: userError }
+}
+
 export async function deleteCommandById({ commandId }: { commandId: string }) {
   const { error } = await supabase.from('commands').delete().eq('id', commandId)
 

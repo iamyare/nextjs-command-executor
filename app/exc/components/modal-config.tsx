@@ -19,8 +19,8 @@ import {
   DrawerTitle,
   DrawerTrigger
 } from '@/components/ui/drawer'
-import { Plus, Settings } from 'lucide-react'
-import FormCreateCommand from '@/components/form-create-command'
+import { Settings } from 'lucide-react'
+import TabsConf from './tabs-conf'
 
 export function ConfigModal({
   userId,
@@ -39,10 +39,9 @@ export function ConfigModal({
         <DialogTrigger asChild>
           <Button
             variant={'ghost'}
-            className='relative flex justify-start select-none  items-center rounded-sm px-3 py-1.5  w-full outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
+            size={'icon'}
           >
-            <Settings className=' size-4' />
-            <span className=' ml-2'>Configuración</span>
+            <Settings className=' size-5' />
           </Button>
         </DialogTrigger>
         <DialogContent className=' max-w-lg '>
@@ -50,7 +49,7 @@ export function ConfigModal({
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <FormCreateCommand userId={userId} setOpen={setOpen} />
+          <TabsConf setOpen={setOpen} userId={userId} />
         </DialogContent>
       </Dialog>
     )
@@ -61,10 +60,9 @@ export function ConfigModal({
       <DrawerTrigger>
       <Button
             variant={'ghost'}
-            className='relative flex justify-start select-none  items-center rounded-sm px-3 py-1.5  w-full outline-none transition-colors focus:bg-accent focus:text-accent-foreground data-[disabled]:pointer-events-none data-[disabled]:opacity-50 '
+            size={'icon'}
           >
-            <Settings className=' size-4' />
-            <span className=' ml-2'>Configuración</span>
+            <Settings className=' size-5' />
           </Button>
       </DrawerTrigger>
       <DrawerContent>
@@ -72,11 +70,7 @@ export function ConfigModal({
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        <FormCreateCommand
-          className=' px-4 pb-5'
-          userId={userId}
-          setOpen={setOpen}
-        />
+        <TabsConf setOpen={setOpen} userId={userId} />
       </DrawerContent>
     </Drawer>
   )
