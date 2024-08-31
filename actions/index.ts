@@ -77,7 +77,6 @@ export async function getHistoryCommands({ userId }: { userId: string }) {
 
 //obtener los 5 ultimos comandos ejecutados
 export async function getLastCommands({ userId }: { userId: string }) {
-  console.log('userId', userId)
   const { data: commands, error: commandsError } = await supabase
     .from('command_history')
     .select('*, command:commands!inner(*)')

@@ -5,6 +5,7 @@ import { Sparkles, Terminal, AlertTriangle } from 'lucide-react'
 import { Input } from './ui/input'
 import { AnimatePresence, motion } from 'framer-motion'
 import { generateCommands } from '@/lib/gemini'
+import { useApiKey } from '@/context/useAPIKeysContext'
 
 type IAFormInputProps = {
   field: any
@@ -29,6 +30,7 @@ export function IAFormInput({ field, watch, osDevice }: IAFormInputProps) {
   const [isAIPending, setIsAIPending] = useState(false)
   const [commandAi, setCommandAi] = useState<CommandAI[] | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const geminiKey = useApiKey('gemini_key')
 
   const commandValue = watch('command')
 
@@ -56,7 +58,7 @@ export function IAFormInput({ field, watch, osDevice }: IAFormInputProps) {
       const { commandIA } = await generateCommands({
         prompt,
         OS,
-        apiKey: process.env.NEXT_PUBLIC_GEMINI_KEY ?? '',
+        apiKey: geminiKey ?? '',
       })
 
       console.log('commandIA:', commandIA)
@@ -68,7 +70,7 @@ export function IAFormInput({ field, watch, osDevice }: IAFormInputProps) {
     } finally {
       setIsAIPending(false)
     }
-  }, [commandValue, osDevice])
+  }, [commandValue, geminiKey, osDevice])
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {

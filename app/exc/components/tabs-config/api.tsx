@@ -16,7 +16,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
 import { Separator } from '@/components/ui/separator'
-import { useTransition } from 'react'
+import { useEffect, useTransition } from 'react'
 import { getApiKeyByUser, insertApiKeys, updateApiKeys as updateApiKey } from '@/actions'
 import { useApiKeys } from '@/context/useAPIKeysContext'
 import { useRouter } from 'next/navigation'
@@ -37,22 +37,23 @@ export default function APITabs({
   setOpen: (open: boolean) => void
 }) {
   const [isPending, startTransition] = useTransition()
-  const [apiIsLoading, setApiIsLoading] = useTransition()
-  const { apiKeys, updateApiKeys } = useApiKeys()
+  const { apiKeys , updateApiKeys } = useApiKeys()
   const router = useRouter()
+
+
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      gemini_key: apiKeys.gemini_key ?? '',
+      gemini_key: apiKeys.gemini_key || '',
       user_id: userId
     }
   })
 
 
 
-  function onSubmit(values: z.infer<typeof FormSchema>) {
 
+  function onSubmit(values: z.infer<typeof FormSchema>) {
     startTransition(async () => {
       try {
         // Primero, intentamos obtener las claves API existentes
@@ -81,6 +82,8 @@ export default function APITabs({
             return;
           }
 
+          updateApiKeys({ gemini_key: values.gemini_key });
+          router.refresh();
         } else {
           // Si no existen claves, insertamos nuevas
           const {  errorApiKeys: insertError } = await insertApiKeys({
@@ -96,7 +99,8 @@ export default function APITabs({
             return;
           }
         }
-
+        
+        updateApiKeys({ gemini_key: values.gemini_key });
         setOpen(false);
         router.refresh();
       } catch (error) {
@@ -131,9 +135,7 @@ export default function APITabs({
               <FormItem>
                 <FormLabel>API Key</FormLabel>
                 <FormControl>
-                  <Input placeholder={
-                    apiIsLoading ? 'Obteniendo API KEY...' : 'Ingresa tu API KEY'
-                  } type='password' {...field} />
+                  <Input placeholder='Ingresa tu API KEY' type='password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
