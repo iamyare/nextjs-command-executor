@@ -35,6 +35,7 @@ import { signOut } from '@/actions'
 import { ThemeToggle } from '@/components/theme-toggle'
 import CommandRecent from './command-recent'
 import { ConfigModal } from './modal-config'
+import BannerDesktop from '@/components/banner-desktop'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -113,6 +114,7 @@ export default function Sidebar({
 
   return (
     <>
+    <BannerDesktop />
       <Disclosure as='header'>
         {({ open }) => (
           <>
@@ -319,6 +321,8 @@ export default function Sidebar({
           </>
         )}
       </Disclosure>
+
+      
 
       <main
         className={`w-full
