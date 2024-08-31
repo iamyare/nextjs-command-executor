@@ -10,6 +10,7 @@ declare global {
     type CommandHistoryInsert = DB['public']['Tables']['command_history']['Insert']
     type Device = DB['public']['Tables']['devices']['Row']
     type DeviceInsert = DB['public']['Tables']['devices']['Insert']
+    type DeviceUpdate = DB['public']['Tables']['devices']['Update']
     type Token = DB['public']['Tables']['tokens']['Row']
     type TokenInsert = DB['public']['Tables']['tokens']['Insert']
     type ApiKey = DB['public']['Tables']['api_keys']['Row']

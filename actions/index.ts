@@ -186,3 +186,18 @@ export async function insertApiKeys({ apiKeysData }: { apiKeysData: ApiKeyInsert
 
   return { apiKeys, errorApiKeys }
 }
+
+//Eliminar dispositivo
+export async function deleteDeviceById({ deviceId }: { deviceId: string }) {
+  const { error } = await supabase.from('devices').delete().eq('id', deviceId)
+
+  return { error }
+}
+
+//UpdateDeviceName
+export async function UpdateDeviceName({ data }: { data: DeviceUpdate }) {
+  const { data: deviceUpdateResult, error: deviceUpdateError } =
+    await supabase.from('devices').update({ ...data }).eq('id', data.id ?? '')
+
+  return { deviceUpdateResult, deviceUpdateError }
+}
