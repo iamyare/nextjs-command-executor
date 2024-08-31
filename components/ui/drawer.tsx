@@ -24,29 +24,42 @@ const DrawerOverlay = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Overlay>
 >(({ className, ...props }, ref) => (
+
   <DrawerPrimitive.Overlay
     ref={ref}
     className={cn("fixed inset-0 z-50 bg-black/10 backdrop-blur-sm", className)}
     {...props}
   />
+
 ))
 DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
+
+type DialogContentProps = React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
+  classNameOverlay?: string;
+  classNameGradient?: string;
+};
+
 const DrawerContent = React.forwardRef<
-  React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
->(({ className, children, ...props }, ref) => (
+  React.ElementRef<typeof DrawerPrimitive.Content>, DialogContentProps
+>(({ className, classNameOverlay, classNameGradient, children, ...props }, ref) => (
   <DrawerPortal>
-    <DrawerOverlay />
+    <DrawerOverlay className={classNameOverlay} />
+    <div 
+    ref={ref}
+    className={cn('min-h-[calc(100vh-50vh)] min-w-[calc(100vw-50vw)] max-w-[780px] max-h-[780px] w-full h-full md:min-h-[780px] md:min-w-[780px] rounded-full fixed top-1/2 left-1/2 gradient-experience__1 blur-[150px] -translate-y-1/2 -translate-x-1/2  -z-[2] opacity-animation ',
+      classNameGradient
+    )}></div>
+
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
-        "overflow-y-auto", // Add scrolling
+        "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[20px] overflow-hidden bg-background",
         className
       )}
       {...props}
     >
+
       <div className="sticky top-0 z-20 flex h-10 items-center justify-center bg-background">
         <div className="h-2 w-[100px] rounded-full bg-muted" />
       </div>

@@ -5,4 +5,4 @@
 - [ ] Agregar más interacciones en el dashboard
 - [ ] Solucionar: `AuthSessionMissingError: Auth session missing!`
 - [x] Ruta protegida
-- [ ] Modal para recordar que se necesita el desktop app
+- [x] Modal para recordar que se necesita el desktop app

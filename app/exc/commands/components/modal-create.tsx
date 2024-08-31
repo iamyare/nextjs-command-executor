@@ -62,7 +62,7 @@ export function CreateCommandModal({
           Crear comando
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className=' h-[85dvh]'>
         <DrawerHeader className='text-left'>
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>

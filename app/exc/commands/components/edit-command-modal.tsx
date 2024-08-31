@@ -78,7 +78,7 @@ export default function EditCommandModal({
           Editar comando
         </Button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className=' h-[85dvh]'>
         <DrawerHeader className='text-left'>
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
