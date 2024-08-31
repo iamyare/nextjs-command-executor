@@ -44,6 +44,7 @@ import { deleteDeviceById } from '@/actions'
 import { toast } from '@/components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import EditDeviceNameModal from './edit-device-modal'
+import DeleteDeviceModal from './delete-device-modal'
 
 export function DeviceList({ data }: { data: Device[] }) {
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -125,36 +126,7 @@ export function DeviceList({ data }: { data: Device[] }) {
                   deviceID={device.id}
                   deviceName={device.name}
                 />
-                <Button
-                  variant={'ghost'}
-                  className='justify-start hover:bg-destructive/20 hover:text-red-500 hover:animate-shake'
-                  disabled={isPeding}
-                  onClick={() => {
-                    startTransition(async () => {
-                      const { error } = await deleteDeviceById({
-                        deviceId: device.id
-                      })
-                      console.log(error)
-                      if (error) {
-                        toast({
-                          variant: 'destructive',
-                          title: 'Error',
-                          description: 'No se pudo eliminar el dispositivo'
-                        })
-                        return
-                      }
-                      toast({
-                        title: 'Dispositivo eliminado',
-                        description: 'El dispositivo se ha eliminado con exito'
-                      })
-                      //Aqui se debe de poner el router
-                      router.refresh()
-                    })
-                  }}
-                >
-                  <Trash className='h-4 w-4 mr-2 ' />
-                  Eliminar dispositivo
-                </Button>
+               <DeleteDeviceModal deviceID={device.id} />
               </div>
             </DropdownMenuContent>
           </DropdownMenu>
