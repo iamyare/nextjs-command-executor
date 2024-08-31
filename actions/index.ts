@@ -144,3 +144,27 @@ export async function getApiKeyByUser({ userId }: { userId: string }) {
     .maybeSingle()
   return { appiKey, appiKeyError } 
 }
+
+
+//update api keys
+export async function updateApiKeys({ apiKeysData }: { apiKeysData: ApiKeyUpdate }) {
+  const { data: apiKeys, error: errorApiKeys } = await supabase
+    .from('api_keys')
+    .update({ ...apiKeysData })
+    .eq('user_id', apiKeysData.user_id ?? '')
+    .select('*')
+    .single()
+
+  return { apiKeys, errorApiKeys }
+}
+
+//insert api keys
+export async function insertApiKeys({ apiKeysData }: { apiKeysData: ApiKeyInsert }) {
+  const { data: apiKeys, error: errorApiKeys } = await supabase
+    .from('api_keys')
+    .insert({ ...apiKeysData })
+    .select('*')
+    .single()
+
+  return { apiKeys, errorApiKeys }
+}

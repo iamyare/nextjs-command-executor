@@ -16,13 +16,17 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
 import { Separator } from '@/components/ui/separator'
-import { useEffect, useState, useTransition } from 'react'
-import { getApiKeyByUser } from '@/actions'
+import { useTransition } from 'react'
+import { getApiKeyByUser, insertApiKeys, updateApiKeys as updateApiKey } from '@/actions'
+import { useApiKeys } from '@/context/useAPIKeysContext'
+import { useRouter } from 'next/navigation'
 
 const FormSchema = z.object({
-  api_key: z.string().min(2, {
+  gemini_key: z.string().min(2, {
     message: 'API Key must be at least 2 characters.'
-  })
+  }),
+  user_id: z.string()
+
 })
 
 export default function APITabs({
@@ -34,44 +38,77 @@ export default function APITabs({
 }) {
   const [isPending, startTransition] = useTransition()
   const [apiIsLoading, setApiIsLoading] = useTransition()
-  const [apiKey, setApiKey] = useState<ApiKey | null>(null)
+  const { apiKeys, updateApiKeys } = useApiKeys()
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      api_key: apiKey?.gemini_key ?? ''
+      gemini_key: apiKeys.gemini_key ?? '',
+      user_id: userId
     }
   })
 
-  useEffect(() => {
-    setApiIsLoading(async()=>{
-      const { appiKey, appiKeyError } = await getApiKeyByUser({ userId })
-      if (appiKeyError) {
-        toast({
-          title: 'Error',
-          description: appiKeyError.message
-        })
-        return
-      }
-      setApiKey(appiKey)
-      form.setValue('api_key', appiKey?.gemini_key ?? '')
-    })
-  },[apiKey, form, userId])
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+
+  function onSubmit(values: z.infer<typeof FormSchema>) {
+
     startTransition(async () => {
-      toast({
-        title: 'You submitted the following values:',
-        description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-            <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        )
-      })
+      try {
+        // Primero, intentamos obtener las claves API existentes
+        const {  appiKeyError } = await getApiKeyByUser({ userId });
 
-      setOpen(false)
-    })
-  }
+        if (appiKeyError) {
+          console.error('Error al obtener las claves API:', appiKeyError);
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Error al obtener las claves API.',
+          });
+          return;
+        }
+
+        if (apiKeys) {
+          // Si ya existen claves, actualizamos
+          const { errorApiKeys: updateError } = await updateApiKey({apiKeysData: values});
+
+          if (updateError) {
+            toast({
+              variant: 'destructive',
+              title: 'Error',
+              description: 'Error al actualizar las claves API.',
+            });
+            return;
+          }
+
+        } else {
+          // Si no existen claves, insertamos nuevas
+          const {  errorApiKeys: insertError } = await insertApiKeys({
+            apiKeysData: { gemini_key: values.gemini_key , user_id: userId }
+          });
+
+          if (insertError) {
+            toast({
+              variant: 'destructive',
+              title: 'Error',
+              description: 'Error al insertar las claves API.',
+            });
+            return;
+          }
+        }
+
+        setOpen(false);
+        router.refresh();
+      } catch (error) {
+        console.error('Error al guardar las claves API:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Error al guardar las claves API.',
+        });
+      }
+    });
+  };
 
   return (
     <section className='flex flex-col gap-2'>
@@ -89,7 +126,7 @@ export default function APITabs({
         >
           <FormField
             control={form.control}
-            name='api_key'
+            name='gemini_key'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>API Key</FormLabel>
