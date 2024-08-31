@@ -12,5 +12,8 @@ declare global {
     type DeviceInsert = DB['public']['Tables']['devices']['Insert']
     type Token = DB['public']['Tables']['tokens']['Row']
     type TokenInsert = DB['public']['Tables']['tokens']['Insert']
+    type ApiKey = DB['public']['Tables']['api_keys']['Row']
+    type ApiKeyInsert = DB['public']['Tables']['api_keys']['Insert']
+    type ApiKeyUpdate = DB['public']['Tables']['api_keys']['Update']
 
 }

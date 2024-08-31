@@ -16,12 +16,17 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
 import { Separator } from '@/components/ui/separator'
-import { useTransition } from 'react'
+import { useEffect, useTransition } from 'react'
+import { getApiKeyByUser, insertApiKeys, updateApiKeys as updateApiKey } from '@/actions'
+import { useApiKeys } from '@/context/useAPIKeysContext'
+import { useRouter } from 'next/navigation'
 
 const FormSchema = z.object({
-  api_key: z.string().min(2, {
+  gemini_key: z.string().min(2, {
     message: 'API Key must be at least 2 characters.'
-  })
+  }),
+  user_id: z.string()
+
 })
 
 export default function APITabs({
@@ -32,28 +37,82 @@ export default function APITabs({
   setOpen: (open: boolean) => void
 }) {
   const [isPending, startTransition] = useTransition()
+  const { apiKeys , updateApiKeys } = useApiKeys()
+  const router = useRouter()
+
+
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      api_key: ''
+      gemini_key: apiKeys.gemini_key || '',
+      user_id: userId
     }
   })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    startTransition(async () => {
-      toast({
-        title: 'You submitted the following values:',
-        description: (
-          <pre className='mt-2 w-[340px] rounded-md bg-slate-950 p-4'>
-            <code className='text-white'>{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        )
-      })
 
-      setOpen(false)
-    })
-  }
+
+
+  function onSubmit(values: z.infer<typeof FormSchema>) {
+    startTransition(async () => {
+      try {
+        // Primero, intentamos obtener las claves API existentes
+        const {  appiKeyError } = await getApiKeyByUser({ userId });
+
+        if (appiKeyError) {
+          console.error('Error al obtener las claves API:', appiKeyError);
+          toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Error al obtener las claves API.',
+          });
+          return;
+        }
+
+        if (apiKeys) {
+          // Si ya existen claves, actualizamos
+          const { errorApiKeys: updateError } = await updateApiKey({apiKeysData: values});
+
+          if (updateError) {
+            toast({
+              variant: 'destructive',
+              title: 'Error',
+              description: 'Error al actualizar las claves API.',
+            });
+            return;
+          }
+
+          updateApiKeys({ gemini_key: values.gemini_key });
+          router.refresh();
+        } else {
+          // Si no existen claves, insertamos nuevas
+          const {  errorApiKeys: insertError } = await insertApiKeys({
+            apiKeysData: { gemini_key: values.gemini_key , user_id: userId }
+          });
+
+          if (insertError) {
+            toast({
+              variant: 'destructive',
+              title: 'Error',
+              description: 'Error al insertar las claves API.',
+            });
+            return;
+          }
+        }
+        
+        updateApiKeys({ gemini_key: values.gemini_key });
+        setOpen(false);
+        router.refresh();
+      } catch (error) {
+        console.error('Error al guardar las claves API:', error);
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Error al guardar las claves API.',
+        });
+      }
+    });
+  };
 
   return (
     <section className='flex flex-col gap-2'>
@@ -71,12 +130,12 @@ export default function APITabs({
         >
           <FormField
             control={form.control}
-            name='api_key'
+            name='gemini_key'
             render={({ field }) => (
               <FormItem>
                 <FormLabel>API Key</FormLabel>
                 <FormControl>
-                  <Input placeholder='KEY' type='password' {...field} />
+                  <Input placeholder='Ingresa tu API KEY' type='password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

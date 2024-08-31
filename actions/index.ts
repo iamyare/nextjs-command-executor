@@ -19,6 +19,8 @@ export async function getUser() {
   return await supabase.auth.getUser()
 }
 
+
+
 export async function SelectCommand({ userId }: { userId: string }) {
   const { data: commands, error: commandsError } = await supabase
     .from('commands')
@@ -75,7 +77,6 @@ export async function getHistoryCommands({ userId }: { userId: string }) {
 
 //obtener los 5 ultimos comandos ejecutados
 export async function getLastCommands({ userId }: { userId: string }) {
-  console.log('userId', userId)
   const { data: commands, error: commandsError } = await supabase
     .from('command_history')
     .select('*, command:commands!inner(*)')
@@ -135,10 +136,43 @@ export async function createToken({ userId }: {userId: string}) {
 }
 
 export async function getTokensByUser({ userId }: { userId: string }) {
-  const {data: tokens, error: tokensError} = 
-    await supabase.from('tokens')
+  const { data: tokens, error: tokensError } = await supabase.from('tokens')
     .select('*')
     .eq('user_id', userId)
     .single()
-  return { tokens, tokensError } 
+
+  return { tokens, tokensError }
+}
+
+export async function getApiKeyByUser({ userId }: { userId: string }) {
+  const {data: appiKey, error: appiKeyError} = 
+    await supabase.from('api_keys')
+    .select('*')
+    .eq('user_id', userId)
+    .maybeSingle()
+  return { appiKey, appiKeyError } 
+}
+
+
+//update api keys
+export async function updateApiKeys({ apiKeysData }: { apiKeysData: ApiKeyUpdate }) {
+  const { data: apiKeys, error: errorApiKeys } = await supabase
+    .from('api_keys')
+    .update({ ...apiKeysData })
+    .eq('user_id', apiKeysData.user_id ?? '')
+    .select('*')
+    .single()
+
+  return { apiKeys, errorApiKeys }
+}
+
+//insert api keys
+export async function insertApiKeys({ apiKeysData }: { apiKeysData: ApiKeyInsert }) {
+  const { data: apiKeys, error: errorApiKeys } = await supabase
+    .from('api_keys')
+    .insert({ ...apiKeysData })
+    .select('*')
+    .single()
+
+  return { apiKeys, errorApiKeys }
 }

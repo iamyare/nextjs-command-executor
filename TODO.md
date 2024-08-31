@@ -1,7 +1,8 @@
 - [x] Editar el modal de edición de comandos
 - [ ] Editar y Eliminar dispositivo
-- [ ] Agregar un modal para la API key de Google
+- [x] Agregar un modal para la API key de Google
 - [ ] Mejorar el texto de la aplicación
 - [ ] Agregar más interacciones en el dashboard
 - [ ] Solucionar: `AuthSessionMissingError: Auth session missing!`
 - [x] Ruta protegida
+- [ ] Modal para recordar que se necesita el desktop app
