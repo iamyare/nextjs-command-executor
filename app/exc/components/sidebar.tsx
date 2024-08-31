@@ -233,7 +233,7 @@ export default function Sidebar({
 
             {/* Sidebar Contenido */}
             <header
-              className={`fixed  hidden md:flex md:flex-col md:justify-between bottom-0 start-0 top-0 z-[2]  -translate-x-full transform  border-e  bg-background pb-10 pt-7 transition-all duration-300 hs-overlay-open:translate-x-0 hs-overlay-backdrop-open:bg-black/50 hs-overlay-backdrop-open:backdrop-blur-sm  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-slate-700 [&::-webkit-scrollbar]:w-2
+              className={`fixed  hidden md:flex md:flex-col md:justify-between bottom-0 start-0 top-0 z-[50]  -translate-x-full transform  border-e  bg-background pb-10 pt-7 transition-all duration-300 hs-overlay-open:translate-x-0 hs-overlay-backdrop-open:bg-black/50 hs-overlay-backdrop-open:backdrop-blur-sm  [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-300 dark:[&::-webkit-scrollbar-thumb]:bg-slate-500 [&::-webkit-scrollbar-track]:bg-gray-100 dark:[&::-webkit-scrollbar-track]:bg-slate-700 [&::-webkit-scrollbar]:w-2
                 ${
                   isOpen
                     ? 'bottom-0 end-auto block translate-x-0 w-64 p-4 '

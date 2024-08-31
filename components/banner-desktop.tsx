@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { XIcon } from 'lucide-react';
+import { DownloadCloud, XIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from './ui/button';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -24,7 +24,7 @@ export default function BannerDesktop() {
           <div className='relative isolate flex items-center gap-x-6 overflow-hidden bg-background/50 backdrop-blur-sm px-6 py-2.5 sm:px-3.5 sm:before:flex-1'>
             <div className='flex flex-wrap items-center gap-x-4 gap-y-2 h-12'>
               <p className='text-sm leading-6 text-foreground'>
-                <strong className='font-semibold'>Atencion</strong>
+                <strong className='font-semibold'>Atención</strong>
                 <svg
                   viewBox='0 0 2 2'
                   aria-hidden='true'
@@ -32,16 +32,17 @@ export default function BannerDesktop() {
                 >
                   <circle r={1} cx={1} cy={1} />
                 </svg>
-                Recuerda que es necesario la aplicacion de escritorio para poder
-                ejecturar los comandos.
+                Recuerda que es necesario la aplicación de escritorio para poder
+                ejecutar los comandos.
               </p>
               <Button
                 asChild
                 size={'sm'}
                 className='glow rounded-full py-1.5 px-4 size-fit text-white'
               >
-                <Link href='#'>
-                  Descargar <span aria-hidden='true'>&rarr;</span>
+                <Link href='https://github.com/iamyare/electron-command-executor' target='_blank'>
+                <DownloadCloud className='size-4 mr-2' />
+                  Descargar
                 </Link>
               </Button>
             </div>
