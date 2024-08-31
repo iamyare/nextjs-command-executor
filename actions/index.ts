@@ -135,6 +135,15 @@ export async function createToken({ userId }: {userId: string}) {
   return { tokenInsertResult, tokenInsertError }
 }
 
+export async function getTokensByUser({ userId }: { userId: string }) {
+  const { data: tokens, error: tokensError } = await supabase.from('tokens')
+    .select('*')
+    .eq('user_id', userId)
+    .single()
+
+  return { tokens, tokensError }
+}
+
 export async function getApiKeyByUser({ userId }: { userId: string }) {
   const {data: appiKey, error: appiKeyError} = 
     await supabase.from('api_keys')

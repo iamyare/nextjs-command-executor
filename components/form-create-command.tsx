@@ -24,14 +24,13 @@ import {
   SelectValue
 } from '@/components/ui/select'
 import { Loader, PenLine } from 'lucide-react'
-import {  useEffect, useState, useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
 
 import { toast } from '@/components/ui/use-toast'
 import { getDevicesByUser, InsertCommand } from '@/actions'
 import { cn } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { IAFormInput } from './ai-form'
-
 
 const FormSchema = z.object({
   name: z.string().min(1, {
@@ -46,7 +45,7 @@ const FormSchema = z.object({
   user_id: z.string().min(1, {
     message: 'El usuario es requerido'
   })
-});
+})
 
 export default function FormCreateCommand({
   userId,
@@ -58,6 +57,7 @@ export default function FormCreateCommand({
   setOpen?: (open: boolean) => void
 }) {
   const [isPeding, startTransition] = useTransition()
+  const [devicesIsLoading, setDevicesIsLoading] = useTransition()
   const router = useRouter()
   const [devices, setDevices] = useState<Device[] | null>([])
 
@@ -72,17 +72,21 @@ export default function FormCreateCommand({
   })
 
   useEffect(() => {
-    async function getDevices() {
-      const {devices, devicesError} = await getDevicesByUser({ userId: userId })
+    setDevicesIsLoading(async () => {
+      const { devices, devicesError } = await getDevicesByUser({
+        userId: userId
+      })
       if (devicesError) {
-        console.log(devicesError)
+        toast({
+          variant: 'destructive',
+          title: '¡Oh no! Algo salió mal.',
+          description: 'Hubo un problema al cargar los dispositivos.'
+        })
         return
       }
       setDevices(devices)
-    }
-    getDevices()
+    })
   }, [userId])
-
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     startTransition(async () => {
@@ -111,7 +115,6 @@ export default function FormCreateCommand({
       })
     })
   }
-
 
   return (
     <Form {...form}>
@@ -160,20 +163,24 @@ export default function FormCreateCommand({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {
-                          devices ? (
-
-                            devices?.map((device) => (
-                              <SelectItem value={device.id} key={device.id}>
-                                {device.name} - <span className='text-muted-foreground'>{device.os}</span>
-                              </SelectItem>
-                            ))
-                          ):(
-                            <SelectItem value='loading'>
-                              Cargando dispositivos...
+                        {devicesIsLoading ? (
+                          <SelectItem value='loading'>
+                            Cargando dispositivos...
+                          </SelectItem>
+                        ) : devices ? (
+                          devices?.map((device) => (
+                            <SelectItem value={device.id} key={device.id}>
+                              {device.name} -{' '}
+                              <span className='text-muted-foreground'>
+                                {device.os}
+                              </span>
                             </SelectItem>
-                          )
-                        }
+                          ))
+                        ) : (
+                          <SelectItem value='nofound'>
+                            No hay dispositivos
+                          </SelectItem>
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -199,7 +206,6 @@ export default function FormCreateCommand({
                   <FormItem>
                     <FormLabel className=' flex items-center '>
                       Comando
-
                     </FormLabel>
                     <FormControl>
                       {/* <div className='relative'>
@@ -211,15 +217,23 @@ export default function FormCreateCommand({
                           {...field}
                         />
                       </div> */}
-                      <IAFormInput field={field} watch={form.watch} osDevice={
-                        devices?.find((device) => device.id === form.watch('device_id'))?.os ?? ''
-                      } />
-
+                      <IAFormInput
+                        field={field}
+                        watch={form.watch}
+                        osDevice={
+                          devices?.find(
+                            (device) => device.id === form.watch('device_id')
+                          )?.os ?? ''
+                        }
+                      />
                     </FormControl>
                     <FormDescription>
-                Este es el comando que se ejecutará en el dispositivo. <br />
-                <span className=' font-semibold'>(Presione # para activar la IA)</span>
-              </FormDescription>
+                      Este es el comando que se ejecutará en el dispositivo.{' '}
+                      <br />
+                      <span className=' font-semibold'>
+                        (Presione # para activar la IA)
+                      </span>
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
