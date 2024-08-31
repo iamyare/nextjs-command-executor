@@ -213,6 +213,7 @@ export type Database = {
       }
       users: {
         Row: {
+          alert: boolean
           avatar_url: string | null
           created_at: string
           email: string
@@ -220,6 +221,7 @@ export type Database = {
           id: string
         }
         Insert: {
+          alert?: boolean
           avatar_url?: string | null
           created_at?: string
           email: string
@@ -227,6 +229,7 @@ export type Database = {
           id: string
         }
         Update: {
+          alert?: boolean
           avatar_url?: string | null
           created_at?: string
           email?: string

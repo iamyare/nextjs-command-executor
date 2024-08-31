@@ -1,15 +1,35 @@
-import { useState } from 'react';
-import { DownloadCloud, XIcon } from 'lucide-react';
-import Link from 'next/link';
-import { Button } from './ui/button';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react'
+import { DownloadCloud, XIcon } from 'lucide-react'
+import Link from 'next/link'
+import { Button } from './ui/button'
+import { motion, AnimatePresence } from 'framer-motion'
+import { UpdateUserAlert } from '@/actions'
+import { toast } from './ui/use-toast'
 
-export default function BannerDesktop() {
-  const [isVisible, setIsVisible] = useState(true);
+export default function BannerDesktop({
+  alert,
+  userId
+}: {
+  alert: boolean
+  userId: string
+}) {
+  const [isVisible, setIsVisible] = useState(alert)
 
   const handleHidden = () => {
-    setIsVisible(false);
-  };
+    setIsVisible(false)
+  }
+
+  async function showNoAlertAgain() {
+    const { userUpdateError } = await UpdateUserAlert({ userId, alert: false })
+    if (userUpdateError) {
+      toast({
+        title: 'Error',
+        description: 'No se pudo actualizar la alerta del usuario'
+      })
+      return
+    }
+    setIsVisible(false)
+  }
 
   return (
     <AnimatePresence>
@@ -40,8 +60,11 @@ export default function BannerDesktop() {
                 size={'sm'}
                 className='glow rounded-full py-1.5 px-4 size-fit text-white'
               >
-                <Link href='https://github.com/iamyare/electron-command-executor' target='_blank'>
-                <DownloadCloud className='size-4 mr-2' />
+                <Link
+                  href='https://github.com/iamyare/electron-command-executor'
+                  target='_blank'
+                >
+                  <DownloadCloud className='size-4 mr-2' />
                   Descargar
                 </Link>
               </Button>
@@ -51,6 +74,7 @@ export default function BannerDesktop() {
                 variant={'ghost'}
                 size={'sm'}
                 className=' py-1 px-2 size-fit text-muted-foreground'
+                onClick={showNoAlertAgain}
               >
                 No volver a mostrar
               </Button>
@@ -76,5 +100,5 @@ export default function BannerDesktop() {
         </motion.div>
       )}
     </AnimatePresence>
-  );
+  )
 }
