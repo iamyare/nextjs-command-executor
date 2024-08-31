@@ -19,6 +19,8 @@ export async function getUser() {
   return await supabase.auth.getUser()
 }
 
+
+
 export async function SelectCommand({ userId }: { userId: string }) {
   const { data: commands, error: commandsError } = await supabase
     .from('commands')
@@ -134,11 +136,11 @@ export async function createToken({ userId }: {userId: string}) {
   return { tokenInsertResult, tokenInsertError }
 }
 
-export async function getTokensByUser({ userId }: { userId: string }) {
-  const {data: tokens, error: tokensError} = 
-    await supabase.from('tokens')
+export async function getApiKeyByUser({ userId }: { userId: string }) {
+  const {data: appiKey, error: appiKeyError} = 
+    await supabase.from('api_keys')
     .select('*')
     .eq('user_id', userId)
-    .single()
-  return { tokens, tokensError } 
+    .maybeSingle()
+  return { appiKey, appiKeyError } 
 }

@@ -16,7 +16,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from '@/components/ui/use-toast'
 import { Separator } from '@/components/ui/separator'
-import { useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
+import { getApiKeyByUser } from '@/actions'
 
 const FormSchema = z.object({
   api_key: z.string().min(2, {
@@ -32,13 +33,30 @@ export default function APITabs({
   setOpen: (open: boolean) => void
 }) {
   const [isPending, startTransition] = useTransition()
+  const [apiIsLoading, setApiIsLoading] = useTransition()
+  const [apiKey, setApiKey] = useState<ApiKey | null>(null)
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      api_key: ''
+      api_key: apiKey?.gemini_key ?? ''
     }
   })
+
+  useEffect(() => {
+    setApiIsLoading(async()=>{
+      const { appiKey, appiKeyError } = await getApiKeyByUser({ userId })
+      if (appiKeyError) {
+        toast({
+          title: 'Error',
+          description: appiKeyError.message
+        })
+        return
+      }
+      setApiKey(appiKey)
+      form.setValue('api_key', appiKey?.gemini_key ?? '')
+    })
+  },[apiKey, form, userId])
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     startTransition(async () => {
@@ -76,7 +94,9 @@ export default function APITabs({
               <FormItem>
                 <FormLabel>API Key</FormLabel>
                 <FormControl>
-                  <Input placeholder='KEY' type='password' {...field} />
+                  <Input placeholder={
+                    apiIsLoading ? 'Obteniendo API KEY...' : 'Ingresa tu API KEY'
+                  } type='password' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
