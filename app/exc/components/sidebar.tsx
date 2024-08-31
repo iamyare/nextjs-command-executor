@@ -114,7 +114,10 @@ export default function Sidebar({
 
   return (
     <>
-    <BannerDesktop />
+    <BannerDesktop
+      alert={user.alert}
+      userId={user.id}
+     />
       <Disclosure as='header'>
         {({ open }) => (
           <>

@@ -30,6 +30,16 @@ export async function SelectCommand({ userId }: { userId: string }) {
   return { commands, commandsError }
 }
 
+//cambiar alert de user
+export async function UpdateUserAlert({ alert, userId }: { alert: boolean, userId:string }) {
+  const { data: userUpdateResult, error: userUpdateError } = await supabase
+    .from('users')
+    .update({ alert: alert })
+    .eq('id', userId)
+
+  return { userUpdateResult, userUpdateError }
+}
+
 export async function InsertCommand({ data }: { data: CommandInsert }) {
   const { data: commandInsertResult, error: commandInsertError } =
     await supabase.from('commands').insert({ ...data })

@@ -1,5 +1,3 @@
-"use client"
-
 import * as React from "react"
 import { Drawer as DrawerPrimitive } from "vaul"
 
@@ -38,10 +36,8 @@ const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
-  <DrawerPortal >
+  <DrawerPortal>
     <DrawerOverlay />
-    {/* <div className='min-h-[calc(100vh-50vh)]  min-w-[calc(100vw-50vw)] max-w-[780px] max-h-[780px] w-full h-full md:min-h-[780px] md:min-w-[780px] rounded-full fixed -bottom-1/4 left-1/2 gradient-experience__1  -translate-y-1/4 blur-[150px] -translate-x-1/2  z-[-2] opacity-animation'></div> */}
-
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
@@ -51,8 +47,12 @@ const DrawerContent = React.forwardRef<
       )}
       {...props}
     >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
-      {children}
+      <div className="sticky top-0 z-20 flex h-10 items-center justify-center bg-background">
+        <div className="h-2 w-[100px] rounded-full bg-muted" />
+      </div>
+      <div className="flex-1 overflow-y-auto px-4 pb-8">
+        {children}
+      </div>
     </DrawerPrimitive.Content>
   </DrawerPortal>
 ))
