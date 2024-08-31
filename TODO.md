@@ -1,5 +1,5 @@
 - [x] Editar el modal de edición de comandos
-- [ ] Editar y Eliminar dispositivo
+- [x] Editar y Eliminar dispositivo
 - [x] Agregar un modal para la API key de Google
 - [ ] Mejorar el texto de la aplicación
 - [ ] Agregar más interacciones en el dashboard
