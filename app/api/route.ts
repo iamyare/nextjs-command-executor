@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const tokenResponse = await verifyAndExchangeAuthCode(code as string, clientId as string, clientSecret as string)
+    const tokenResponse = await verifyAndExchangeAuthCode(code as string, clientId as string, clientSecret as string, redirectUri as string)
     await debugLog('info', 'Token exchange successful', { code })
     return NextResponse.json(tokenResponse)
   } catch (error) {

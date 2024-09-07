@@ -40,8 +40,12 @@ export async function createAuthCode(clientId: string, redirectUri: string, stat
   return authCode
 }
 
-export async function verifyAndExchangeAuthCode(code: string, clientId: string, clientSecret: string) {
+
+export async function verifyAndExchangeAuthCode(code: string, clientId: string, clientSecret: string, redirectUri: string) {
+  await debugLog('info', 'Verifying and exchanging auth code', { code, clientId, redirectUri })
+
   if (clientId !== process.env.ALEXA_CLIENT_ID || clientSecret !== process.env.ALEXA_CLIENT_SECRET) {
+    await debugLog('error', 'Invalid client credentials', { clientId })
     throw new Error('Invalid client credentials')
   }
 
@@ -52,26 +56,35 @@ export async function verifyAndExchangeAuthCode(code: string, clientId: string, 
     .eq('code', code)
     .single()
 
-  if (error || !authCode || new Date(authCode.expires_at) < new Date()) {
+  if (error || !authCode || new Date(authCode.expires_at) < new Date() || authCode.redirect_uri !== redirectUri) {
+    await debugLog('error', 'Invalid authorization code', { code, error: error?.message })
     throw new Error('Invalid authorization code')
   }
 
-  const accessToken = nanoid()
-  const refreshToken = nanoid()
+  const accessToken = nanoid(32)
+  const refreshToken = nanoid(32)
+  const expiresIn = 3600 // 1 hour
 
-  await supabase.from('user_tokens').insert({
+  const { error: insertError } = await supabase.from('user_tokens').insert({
     user_id: authCode.user_id,
     access_token: accessToken,
     refresh_token: refreshToken,
-    expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+    expires_at: new Date(Date.now() + expiresIn * 1000).toISOString()
   })
 
+  if (insertError) {
+    await debugLog('error', 'Failed to insert tokens', { error: insertError.message })
+    throw new Error('Failed to generate tokens')
+  }
+
   await supabase.from('auth_codes').delete().eq('code', code)
+
+  await debugLog('info', 'Tokens generated successfully', { accessToken, refreshToken })
 
   return {
     access_token: accessToken,
     token_type: 'Bearer',
-    expires_in: 3600,
+    expires_in: expiresIn,
     refresh_token: refreshToken
   }
 }
@@ -94,7 +107,7 @@ export async function linkAccount(authCode: string, userId: string, redirectUri:
 
   const { error: updateError } = await supabase
     .from('auth_codes')
-    .update({ user_id: userId, redirect_uri: redirectUri })
+    .update({ user_id: userId })
     .eq('code', authCode)
 
   if (updateError) {
@@ -103,7 +116,7 @@ export async function linkAccount(authCode: string, userId: string, redirectUri:
   }
 
   await debugLog('info', 'Account linked successfully', { authCode, userId, redirectUri })
-  return { code: authCode, redirect_uri: redirectUri }
+  return { code: authCode, redirect_uri: redirectUri, state: existingCode.state }
 }
 
 
