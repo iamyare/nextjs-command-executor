@@ -2,6 +2,75 @@
 import { supabase } from '@/lib/supabase'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { unstable_noStore as noStore } from 'next/cache'
+import { nanoid } from 'nanoid'
+
+export async function createAuthCode(clientId: string, redirectUri: string, state: string) {
+  if (clientId !== process.env.ALEXA_CLIENT_ID) {
+    throw new Error('Invalid client_id')
+  }
+
+  const supabase = await createSupabaseServerClient()
+  const authCode = nanoid()
+
+  await supabase.from('auth_codes').insert({
+    code: authCode,
+    state: state,
+    redirect_uri: redirectUri,
+    expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString()
+  })
+
+  return authCode
+}
+
+export async function verifyAndExchangeAuthCode(code: string, clientId: string, clientSecret: string) {
+  if (clientId !== process.env.ALEXA_CLIENT_ID || clientSecret !== process.env.ALEXA_CLIENT_SECRET) {
+    throw new Error('Invalid client credentials')
+  }
+
+  const supabase = await createSupabaseServerClient()
+  const { data: authCode, error } = await supabase
+    .from('auth_codes')
+    .select('*')
+    .eq('code', code)
+    .single()
+
+  if (error || !authCode || new Date(authCode.expires_at) < new Date()) {
+    throw new Error('Invalid authorization code')
+  }
+
+  const accessToken = nanoid()
+  const refreshToken = nanoid()
+
+  await supabase.from('user_tokens').insert({
+    user_id: authCode.user_id,
+    access_token: accessToken,
+    refresh_token: refreshToken,
+    expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+  })
+
+  await supabase.from('auth_codes').delete().eq('code', code)
+
+  return {
+    access_token: accessToken,
+    token_type: 'Bearer',
+    expires_in: 3600,
+    refresh_token: refreshToken
+  }
+}
+
+export async function linkAccount(authCode: string, userId: string) {
+  const supabase = await createSupabaseServerClient()
+  const { error } = await supabase
+    .from('auth_codes')
+    .update({ user_id: userId })
+    .eq('code', authCode)
+
+  if (error) {
+    throw new Error('Failed to link account')
+  }
+}
+
+
 
 export async function readUserSession() {
   noStore()
