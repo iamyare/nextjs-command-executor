@@ -30,7 +30,7 @@ export default function PageClient({user}:{user: User | null}) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ authCode, redirectUri })
       })
-
+  
       if (response.ok) {
         const data = await response.json()
         if (data.redirect) {
@@ -44,7 +44,7 @@ export default function PageClient({user}:{user: User | null}) {
         await debugLog('error', 'Error linking account', { status: response.status, error: errorText })
       }
     } catch (error) {
-      await debugLog('error', 'Exception during account linking', { error: (error as Error).message  })
+      await debugLog('error', 'Exception during account linking', { error: (error as Error).message })
     }
   }
 
