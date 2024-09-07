@@ -2,8 +2,45 @@
 import { GoogleButton } from '@/components/oauth-buttons'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
 export default function PageClient({user}:{user: User | null}) {
+  const searchParams = useSearchParams()
+  const authCode = searchParams.get('auth_code')
+  const redirectUri = searchParams.get('redirect_uri')
+  const alexaAuth = searchParams.get('alexa_auth')
+
+  
+
+  useEffect(() => {
+    if (user && authCode && redirectUri && alexaAuth) {
+      // El usuario ha iniciado sesión y tenemos los parámetros de Alexa
+      linkAccountWithAlexa(authCode, user.id)
+    }
+  }, [user, authCode, redirectUri, alexaAuth])
+
+
+  async function linkAccountWithAlexa(authCode: string, userId: string) {
+    try {
+      const response = await fetch('/api/link-account', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ authCode, userId })
+      })
+
+      if (response.ok) {
+        // Redirigir al usuario de vuelta a Alexa
+        window.location.href = decodeURIComponent(redirectUri!)
+      } else {
+        console.error('Error al vincular la cuenta con Alexa')
+      }
+    } catch (error) {
+      console.error('Error al vincular la cuenta:', error)
+    }
+  }
+
+
   return (
     <main className='relative flex justify-center items-center min-h-dvh   md:min-h-screen w-full   overflow-hidden '>
       <div className='flex justify-center w-full p-10 gap-5 '>
@@ -25,38 +62,45 @@ export default function PageClient({user}:{user: User | null}) {
                 <strong className='text-3xl'>Commands</strong>
               </h1>
             
-              <footer className='mt-auto flex flex-col gap-4 bg-muted/20 rounded-3xl border border-muted/30 p-4'>
+<footer className='mt-auto flex flex-col gap-4 bg-muted/20 rounded-3xl border border-muted/30 p-4'>
                 {
-                    user ? (
-                        <>
-                        <div>
+                  user ? (
+                    <>
+                      <div>
                         <h2 className='text-base font-medium text-pretty'>¡Hola, {user.full_name}!</h2>
                         <p className='text-sm text-muted-foreground'>
-                          ¡Bienvenido de nuevo! ¿Estás listo para comenzar a automatizar
-                          tareas?
+                          {alexaAuth 
+                            ? '¡Estás a punto de vincular tu cuenta con Alexa!' 
+                            : '¡Bienvenido de nuevo! ¿Estás listo para comenzar a automatizar tareas?'}
                         </p>
                       </div>
-                      <Button  className=' glow rounded-2xl text-white' asChild>
-                        <Link href={'/exc'}>
-                        Comenzar
-                        </Link>
-                      </Button>
-                        </>
-
-                    ):(
-                        <>
-                        <div>
+                      {alexaAuth ? (
+                        <Button className='glow rounded-2xl text-white' onClick={() => linkAccountWithAlexa(authCode!, user.id)}>
+                          Vincular con Alexa
+                        </Button>
+                      ) : (
+                        <Button className='glow rounded-2xl text-white' asChild>
+                          <Link href={'/exc'}>
+                            Comenzar
+                          </Link>
+                        </Button>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <div>
                         <h2 className='text-base font-medium'>Comienza ahora</h2>
                         <p className='text-sm text-muted-foreground'>
-                          ¡Nos alegra tenerte a bordo! Por favor, elige una forma de
-                          registrarte o iniciar sesión.
+                          {alexaAuth 
+                            ? 'Por favor, inicia sesión para vincular tu cuenta con Alexa.' 
+                            : '¡Nos alegra tenerte a bordo! Por favor, inicia sesión con Google.'}
                         </p>
                       </div>
                       <GoogleButton className='rounded-2xl' />
-                        </>
-                    )
+                    </>
+                  )
                 }
-            </footer>
+              </footer>
             </header>
 
 
