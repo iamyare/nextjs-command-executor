@@ -44,7 +44,7 @@ export default function PageClient({user}:{user: User | null}) {
         await debugLog('error', 'Error linking account', { status: response.status, error: errorText })
       }
     } catch (error) {
-      await debugLog('error', 'Exception during account linking', { error: error.message })
+      await debugLog('error', 'Exception during account linking', { error: (error as Error).message  })
     }
   }
 

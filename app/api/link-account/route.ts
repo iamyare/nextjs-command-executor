@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     await debugLog('info', 'Redirecting to Alexa', { alexaRedirectUrl })
     return NextResponse.json({ redirect: alexaRedirectUrl })
   } catch (error) {
-    await debugLog('error', 'Failed to link account', { error: error.message })
+    await debugLog('error', 'Failed to link account', { error: (error as Error).message  })
     return NextResponse.json({ error: 'Failed to link account' }, { status: 500 })
   }
 }

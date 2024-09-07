@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     await debugLog('info', 'Redirecting to login URL', { loginUrl })
     return NextResponse.redirect(new URL(loginUrl, request.url))
   } catch (error) {
-    await debugLog('error', 'Failed to create auth code', { error: error.message })
+    await debugLog('error', 'Failed to create auth code', { error: (error as Error).message })
     return NextResponse.json({ error: 'Failed to create auth code' }, { status: 500 })
   }
 }
