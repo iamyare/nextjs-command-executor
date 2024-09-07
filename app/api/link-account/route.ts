@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from 'next/server'
 import { linkAccount, getUser, debugLog } from '@/actions'
 
 export async function POST(request: NextRequest) {
-  const { authCode, redirectUri } = await request.json()
+  const { authCode, redirectUri, state } = await request.json()
   
-  await debugLog('info', 'Link account request received', { authCode, redirectUri })
+  await debugLog('info', 'Link account request received', { authCode, redirectUri, state })
 
-  if (!authCode || !redirectUri) {
-    await debugLog('error', 'Missing authCode or redirectUri', { authCode, redirectUri })
-    return NextResponse.json({ error: 'Missing authCode or redirectUri' }, { status: 400 })
+  if (!authCode || !redirectUri || !state) {
+    await debugLog('error', 'Missing authCode, redirectUri, or state', { authCode, redirectUri, state })
+    return NextResponse.json({ error: 'Missing required parameters' }, { status: 400 })
   }
 
   try {
@@ -20,11 +20,11 @@ export async function POST(request: NextRequest) {
 
     await linkAccount(authCode, user.id, redirectUri)
 
-    const alexaRedirectUrl = `${redirectUri}?code=${authCode}&state=STATE`
+    const alexaRedirectUrl = `${redirectUri}?code=${authCode}`
     await debugLog('info', 'Redirecting to Alexa', { alexaRedirectUrl })
     return NextResponse.json({ redirect: alexaRedirectUrl })
   } catch (error) {
-    await debugLog('error', 'Failed to link account', { error: (error as Error).message  })
+    await debugLog('error', 'Failed to link account', { error: (error as Error).message })
     return NextResponse.json({ error: 'Failed to link account' }, { status: 500 })
   }
 }

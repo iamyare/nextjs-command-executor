@@ -13,8 +13,8 @@ export async function debugLog(level: 'info' | 'error', message: string, data?: 
   })
 }
 
-export async function createAuthCode(clientId: string, redirectUri: string, state: string) {
-  await debugLog('info', 'Creating auth code', { clientId, redirectUri, state })
+export async function createAuthCode(clientId: string, redirectUri: string, state: string, scope?: string) {
+  await debugLog('info', 'Creating auth code', { clientId, redirectUri, state, scope })
   
   if (clientId !== process.env.ALEXA_CLIENT_ID) {
     await debugLog('error', 'Invalid client_id', { clientId, expectedClientId: process.env.ALEXA_CLIENT_ID })
@@ -28,7 +28,7 @@ export async function createAuthCode(clientId: string, redirectUri: string, stat
     code: authCode,
     state: state,
     redirect_uri: redirectUri,
-    expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString()
+    expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 minutes expiration
   })
 
   if (error) {
@@ -103,6 +103,7 @@ export async function linkAccount(authCode: string, userId: string, redirectUri:
   }
 
   await debugLog('info', 'Account linked successfully', { authCode, userId, redirectUri })
+  return { code: authCode, redirect_uri: redirectUri }
 }
 
 

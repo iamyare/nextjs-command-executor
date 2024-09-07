@@ -7,18 +7,18 @@ export async function GET(request: NextRequest) {
   const redirectUri = searchParams.get('redirect_uri')
   const state = searchParams.get('state')
   const responseType = searchParams.get('response_type')
+  const scope = searchParams.get('scope')
 
-
-  await debugLog('info', 'Authorize request received', { clientId, redirectUri, state, responseType })
+  await debugLog('info', 'Authorize request received', { clientId, redirectUri, state, responseType, scope })
 
   if (!clientId || !redirectUri || !state || responseType !== 'code') {
-    await debugLog('error', 'Invalid request parameters', { clientId, redirectUri, state, responseType })
+    await debugLog('error', 'Invalid request parameters', { clientId, redirectUri, state, responseType, scope })
     return NextResponse.json({ error: 'Invalid request' }, { status: 400 })
   }
 
   try {
-    const authCode = await createAuthCode(clientId, redirectUri, state)
-    const loginUrl = `/?auth_code=${authCode}&redirect_uri=${encodeURIComponent(redirectUri)}&alexa_auth=true`
+    const authCode = await createAuthCode(clientId, redirectUri, state, scope ?? undefined)
+    const loginUrl = `/?auth_code=${authCode}&redirect_uri=${encodeURIComponent(redirectUri)}&alexa_auth=true&state=${encodeURIComponent(state)}`
     await debugLog('info', 'Redirecting to login URL', { loginUrl })
     return NextResponse.redirect(new URL(loginUrl, request.url))
   } catch (error) {
