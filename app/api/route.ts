@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     await debugLog('info', 'Token exchange successful', { code })
     return NextResponse.json(tokenResponse)
   } catch (error) {
-    await debugLog('error', 'Failed to exchange auth code', { code, error: error.message })
+    await debugLog('error', 'Failed to exchange auth code', { code, error: (error as Error).message  })
     return NextResponse.json({ error: 'Failed to exchange auth code' }, { status: 400 })
   }
 }
