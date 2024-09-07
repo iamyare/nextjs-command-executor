@@ -4,21 +4,39 @@ import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { unstable_noStore as noStore } from 'next/cache'
 import { nanoid } from 'nanoid'
 
+export async function debugLog(level: 'info' | 'error', message: string, data?: any) {
+  const supabase = await createSupabaseServerClient()
+  await supabase.from('debug_logs').insert({
+    level,
+    message,
+    data: data ? JSON.stringify(data) : null
+  })
+}
+
 export async function createAuthCode(clientId: string, redirectUri: string, state: string) {
+  await debugLog('info', 'Creating auth code', { clientId, redirectUri, state })
+  
   if (clientId !== process.env.ALEXA_CLIENT_ID) {
+    await debugLog('error', 'Invalid client_id', { clientId, expectedClientId: process.env.ALEXA_CLIENT_ID })
     throw new Error('Invalid client_id')
   }
 
   const supabase = await createSupabaseServerClient()
   const authCode = nanoid()
 
-  await supabase.from('auth_codes').insert({
+  const { error } = await supabase.from('auth_codes').insert({
     code: authCode,
     state: state,
     redirect_uri: redirectUri,
     expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString()
   })
 
+  if (error) {
+    await debugLog('error', 'Failed to insert auth code', { error: error.message })
+    throw new Error('Failed to create auth code')
+  }
+
+  await debugLog('info', 'Auth code created successfully', { authCode, redirectUri })
   return authCode
 }
 
@@ -58,18 +76,34 @@ export async function verifyAndExchangeAuthCode(code: string, clientId: string, 
   }
 }
 
-export async function linkAccount(authCode: string, userId: string) {
+export async function linkAccount(authCode: string, userId: string, redirectUri: string) {
+  await debugLog('info', 'Linking account', { authCode, userId, redirectUri })
+  
   const supabase = await createSupabaseServerClient()
-  const { error } = await supabase
+  
+  const { data: existingCode, error: fetchError } = await supabase
     .from('auth_codes')
-    .update({ user_id: userId })
+    .select('*')
+    .eq('code', authCode)
+    .single()
+
+  if (fetchError || !existingCode) {
+    await debugLog('error', 'Auth code not found', { authCode, error: fetchError?.message })
+    throw new Error('Auth code not found')
+  }
+
+  const { error: updateError } = await supabase
+    .from('auth_codes')
+    .update({ user_id: userId, redirect_uri: redirectUri })
     .eq('code', authCode)
 
-  if (error) {
+  if (updateError) {
+    await debugLog('error', 'Failed to update auth code', { authCode, userId, redirectUri, error: updateError.message })
     throw new Error('Failed to link account')
   }
-}
 
+  await debugLog('info', 'Account linked successfully', { authCode, userId, redirectUri })
+}
 
 
 export async function readUserSession() {

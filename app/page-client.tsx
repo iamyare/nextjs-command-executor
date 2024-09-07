@@ -1,4 +1,5 @@
 'use client'
+import { debugLog } from '@/actions'
 import { GoogleButton } from '@/components/oauth-buttons'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -21,22 +22,29 @@ export default function PageClient({user}:{user: User | null}) {
   }, [user, authCode, redirectUri, alexaAuth])
 
 
-  async function linkAccountWithAlexa(authCode: string, userId: string) {
+  async function linkAccountWithAlexa(authCode: string, redirectUri: string) {
     try {
+      await debugLog('info', 'Attempting to link account', { authCode, redirectUri })
       const response = await fetch('/api/link-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ authCode, userId })
+        body: JSON.stringify({ authCode, redirectUri })
       })
 
       if (response.ok) {
-        // Redirigir al usuario de vuelta a Alexa
-        window.location.href = decodeURIComponent(redirectUri!)
+        const data = await response.json()
+        if (data.redirect) {
+          await debugLog('info', 'Redirecting after successful link', { redirect: data.redirect })
+          window.location.href = data.redirect
+        } else {
+          await debugLog('error', 'No redirect URL provided after linking')
+        }
       } else {
-        console.error('Error al vincular la cuenta con Alexa')
+        const errorText = await response.text()
+        await debugLog('error', 'Error linking account', { status: response.status, error: errorText })
       }
     } catch (error) {
-      console.error('Error al vincular la cuenta:', error)
+      await debugLog('error', 'Exception during account linking', { error: error.message })
     }
   }
 
