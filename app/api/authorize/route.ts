@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const loginUrl = `/?auth_code=${authCode}&redirect_uri=${encodeURIComponent(redirectUri)}&alexa_auth=true`
     return NextResponse.redirect(new URL(loginUrl, request.url))
   } catch (error) {
-    console.log(error)
+    console.log('Error Authorize: ', error)
     return NextResponse.json({ error: 'Failed to create auth code' }, { status: 500 })
   }
 }

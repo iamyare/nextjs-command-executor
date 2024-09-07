@@ -12,6 +12,7 @@ export async function POST(request: NextRequest) {
     await linkAccount(authCode, userId)
     return NextResponse.json({ success: true })
   } catch (error) {
+    console.log('Link Account: ', error)
     return NextResponse.json({ error: 'Failed to link account' }, { status: 500 })
   }
 }

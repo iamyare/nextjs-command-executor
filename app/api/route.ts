@@ -13,6 +13,7 @@ export async function POST(request: NextRequest) {
     const tokenResponse = await verifyAndExchangeAuthCode(code, client_id, client_secret)
     return NextResponse.json(tokenResponse)
   } catch (error) {
+    console.log('Toke: ', error)
     return NextResponse.json({ error: 'Failed to exchange auth code' }, { status: 400 })
   }
 }
