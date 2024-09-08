@@ -3,11 +3,11 @@ import { verifyAndExchangeAuthCode, debugLog } from '@/actions'
 
 export async function POST(request: NextRequest) {
   const body = await request.formData()
-  const grantType = body.get('grant_type')
-  const code = body.get('code')
-  const clientId = body.get('client_id')
-  const clientSecret = body.get('client_secret')
-  const redirectUri = body.get('redirect_uri')
+  const grantType = body.get('grant_type')?.toString()
+  const code = body.get('code')?.toString()
+  const clientId = body.get('client_id')?.toString()
+  const clientSecret = body.get('client_secret')?.toString()
+  const redirectUri = body.get('redirect_uri')?.toString()
 
   await debugLog('info', 'Token request received', { grantType, code, clientId, redirectUri })
 
@@ -16,8 +16,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'unsupported_grant_type' }, { status: 400 })
   }
 
+  if (!code || !clientId || !clientSecret || !redirectUri) {
+    await debugLog('error', 'Missing required parameters', { code, clientId, clientSecret, redirectUri })
+    return NextResponse.json({ error: 'invalid_request' }, { status: 400 })
+  }
+
   try {
-    const tokenResponse = await verifyAndExchangeAuthCode(code as string, clientId as string, clientSecret as string, redirectUri as string)
+    const tokenResponse = await verifyAndExchangeAuthCode({ clientId, clientSecret, code, redirectUri })
     await debugLog('info', 'Token exchange successful', { code })
     return NextResponse.json(tokenResponse)
   } catch (error) {

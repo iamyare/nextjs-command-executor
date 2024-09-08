@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'User not authenticated' }, { status: 401 })
     }
 
-    await linkAccount(authCode, user.id, redirectUri)
+    await linkAccount({ authCode, userId: user.id, redirectUri })
 
     const alexaRedirectUrl = `${redirectUri}?code=${authCode}`
     await debugLog('info', 'Redirecting to Alexa', { alexaRedirectUrl })

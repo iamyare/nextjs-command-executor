@@ -13,7 +13,7 @@ export async function debugLog(level: 'info' | 'error', message: string, data?: 
   })
 }
 
-export async function createAuthCode(clientId: string, redirectUri: string, state: string, scope?: string) {
+export async function createAuthCode({ clientId, redirectUri, state, scope }: { clientId: string, redirectUri: string, state: string, scope: string | null }) {
   await debugLog('info', 'Creating auth code', { clientId, redirectUri, state, scope })
   
   if (clientId !== process.env.ALEXA_CLIENT_ID) {
@@ -41,7 +41,7 @@ export async function createAuthCode(clientId: string, redirectUri: string, stat
 }
 
 
-export async function verifyAndExchangeAuthCode(code: string, clientId: string, clientSecret: string, redirectUri: string) {
+export async function verifyAndExchangeAuthCode({ code, clientId, clientSecret, redirectUri }: { code: string, clientId: string, clientSecret: string, redirectUri: string }) {
   await debugLog('info', 'Verifying and exchanging auth code', { code, clientId, redirectUri })
 
   if (clientId !== process.env.ALEXA_CLIENT_ID || clientSecret !== process.env.ALEXA_CLIENT_SECRET) {
@@ -89,7 +89,7 @@ export async function verifyAndExchangeAuthCode(code: string, clientId: string, 
   }
 }
 
-export async function linkAccount(authCode: string, userId: string, redirectUri: string) {
+export async function linkAccount({ authCode, userId, redirectUri }: { authCode: string, userId: string, redirectUri: string }) {
   await debugLog('info', 'Linking account', { authCode, userId, redirectUri })
   
   const supabase = await createSupabaseServerClient()

@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const authCode = await createAuthCode(clientId, redirectUri, state, scope ?? undefined)
+    const authCode = await createAuthCode({ clientId, redirectUri, state, scope })
     const loginUrl = `/?auth_code=${authCode}&redirect_uri=${encodeURIComponent(redirectUri)}&alexa_auth=true&state=${encodeURIComponent(state)}`
     await debugLog('info', 'Redirecting to login URL', { loginUrl })
     return NextResponse.redirect(new URL(loginUrl, request.url))
