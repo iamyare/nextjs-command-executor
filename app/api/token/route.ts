@@ -3,11 +3,12 @@ import { verifyAndExchangeAuthCode, debugLog } from '@/actions'
 
 export async function POST(request: NextRequest) {
   let grantType, code, clientId, clientSecret, redirectUri;
+  let body;
 
   // Check content type and parse body accordingly
   const contentType = request.headers.get('content-type');
   if (contentType && contentType.includes('application/json')) {
-    const body = await request.json();
+     body = await request.json();
     ({ grant_type: grantType, code, client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri } = body);
   } else {
     const body = await request.formData();
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
     redirectUri = body.get('redirect_uri')?.toString();
   }
 
-  await debugLog('info', 'Token request received', { grantType, code, clientId, redirectUri })
+  await debugLog('info', 'Token request received', { grantType, code, clientId, redirectUri, clientSecret, body })
 
   if (grantType !== 'authorization_code') {
     await debugLog('error', 'Unsupported grant type', { grantType })
@@ -26,7 +27,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!code || !clientId || !clientSecret || !redirectUri) {
-    await debugLog('error', 'Missing required parameters', { code, clientId, redirectUri })
+    await debugLog('error', 'Missing required parameters', { code, clientId, redirectUri, clientSecret })
     return NextResponse.json({ error: 'invalid_request' }, { status: 400 })
   }
 
