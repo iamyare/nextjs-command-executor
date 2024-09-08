@@ -41,10 +41,10 @@ export async function createAuthCode({ clientId, redirectUri, state, scope }: { 
 }
 
 
-export async function verifyAndExchangeAuthCode({ code, clientId, clientSecret, redirectUri }: { code: string, clientId: string, clientSecret: string, redirectUri: string }) {
+export async function verifyAndExchangeAuthCode({ code, clientId, redirectUri }: { code: string, clientId: string, redirectUri: string }) {
   await debugLog('info', 'Verifying and exchanging auth code', { code, clientId, redirectUri })
 
-  if (clientId !== process.env.ALEXA_CLIENT_ID || clientSecret !== process.env.ALEXA_CLIENT_SECRET) {
+  if (clientId !== process.env.ALEXA_CLIENT_ID ) {
     await debugLog('error', 'Invalid client credentials', { clientId })
     throw new Error('Invalid client credentials')
   }
