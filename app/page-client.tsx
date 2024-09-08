@@ -1,5 +1,4 @@
 'use client'
-import { debugLog } from '@/actions'
 import { GoogleButton } from '@/components/oauth-buttons'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -12,10 +11,6 @@ export default function PageClient({user}:{user: User | null}) {
   const redirectUri = searchParams.get('redirect_uri')
   const alexaAuth = searchParams.get('alexa_auth')
 
-
-
-  
-
   useEffect(() => {
     if (user && authCode && redirectUri && alexaAuth) {
       // El usuario ha iniciado sesión y tenemos los parámetros de Alexa
@@ -26,7 +21,6 @@ export default function PageClient({user}:{user: User | null}) {
 
   async function linkAccountWithAlexa({ authCode, redirectUri, state }: { authCode: string, redirectUri: string, state: string }) {
     try {
-      await debugLog('info', 'Attempting to link account', { authCode, redirectUri, state })
       const response = await fetch('/api/link-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -37,17 +31,13 @@ export default function PageClient({user}:{user: User | null}) {
         const data = await response.json()
         if (data.redirect) {
           const finalRedirectUrl = `${data.redirect}&state=${encodeURIComponent(state)}`
-          await debugLog('info', 'Redirecting after successful link', { redirect: finalRedirectUrl })
           window.location.href = finalRedirectUrl
         } else {
-          await debugLog('error', 'No redirect URL provided after linking')
         }
       } else {
         const errorText = await response.text()
-        await debugLog('error', 'Error linking account', { status: response.status, error: errorText })
       }
     } catch (error) {
-      await debugLog('error', 'Exception during account linking', { error: (error as Error).message })
     }
   }
 
