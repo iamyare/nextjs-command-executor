@@ -3,23 +3,26 @@ import { verifyAndExchangeAuthCode, debugLog } from '@/actions'
 
 export async function POST(request: NextRequest) {
   let grantType, code, clientId, clientSecret, redirectUri;
-  let body;
 
   // Check content type and parse body accordingly
   const contentType = request.headers.get('content-type');
   if (contentType && contentType.includes('application/json')) {
-     body = await request.json();
+    const body = await request.json();
     ({ grant_type: grantType, code, client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri } = body);
+    //debugLog de todo el body
+    await debugLog('info', 'Token request received body', body)
   } else {
-    body = await request.formData();
+    const body = await request.formData();
     grantType = body.get('grant_type')?.toString();
     code = body.get('code')?.toString();
     clientId = body.get('client_id')?.toString();
     clientSecret = body.get('client_secret')?.toString();
     redirectUri = body.get('redirect_uri')?.toString();
+    //debugLog de todo el body
+    await debugLog('info', 'Token request received body', body)
   }
 
-  await debugLog('info', 'Token request received', {  body })
+  await debugLog('info', 'Token request received', {  grantType, code, clientId, redirectUri })
 
   if (grantType !== 'authorization_code') {
     await debugLog('error', 'Unsupported grant type', { grantType })
