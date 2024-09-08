@@ -2,12 +2,21 @@ import { NextRequest, NextResponse } from 'next/server'
 import { verifyAndExchangeAuthCode, debugLog } from '@/actions'
 
 export async function POST(request: NextRequest) {
-  const body = await request.formData()
-  const grantType = body.get('grant_type')?.toString()
-  const code = body.get('code')?.toString()
-  const clientId = body.get('client_id')?.toString()
-  const clientSecret = body.get('client_secret')?.toString()
-  const redirectUri = body.get('redirect_uri')?.toString()
+  let grantType, code, clientId, clientSecret, redirectUri;
+
+  // Check content type and parse body accordingly
+  const contentType = request.headers.get('content-type');
+  if (contentType && contentType.includes('application/json')) {
+    const body = await request.json();
+    ({ grant_type: grantType, code, client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri } = body);
+  } else {
+    const body = await request.formData();
+    grantType = body.get('grant_type')?.toString();
+    code = body.get('code')?.toString();
+    clientId = body.get('client_id')?.toString();
+    clientSecret = body.get('client_secret')?.toString();
+    redirectUri = body.get('redirect_uri')?.toString();
+  }
 
   await debugLog('info', 'Token request received', { grantType, code, clientId, redirectUri })
 
