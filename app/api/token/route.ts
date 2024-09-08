@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
      body = await request.json();
     ({ grant_type: grantType, code, client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri } = body);
   } else {
-    const body = await request.formData();
+    body = await request.formData();
     grantType = body.get('grant_type')?.toString();
     code = body.get('code')?.toString();
     clientId = body.get('client_id')?.toString();
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     redirectUri = body.get('redirect_uri')?.toString();
   }
 
-  await debugLog('info', 'Token request received', { grantType, code, clientId, redirectUri, clientSecret, body })
+  await debugLog('info', 'Token request received', {  body })
 
   if (grantType !== 'authorization_code') {
     await debugLog('error', 'Unsupported grant type', { grantType })
