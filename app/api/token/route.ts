@@ -17,12 +17,12 @@ export async function POST(request: NextRequest) {
   }
 
   if (!code || !clientId || !clientSecret || !redirectUri) {
-    await debugLog('error', 'Missing required parameters', { code, clientId, clientSecret, redirectUri })
+    await debugLog('error', 'Missing required parameters', { code, clientId, redirectUri })
     return NextResponse.json({ error: 'invalid_request' }, { status: 400 })
   }
 
   try {
-    const tokenResponse = await verifyAndExchangeAuthCode({ clientId, clientSecret, code, redirectUri })
+    const tokenResponse = await verifyAndExchangeAuthCode({ code, clientId, clientSecret, redirectUri })
     await debugLog('info', 'Token exchange successful', { code })
     return NextResponse.json(tokenResponse)
   } catch (error) {
