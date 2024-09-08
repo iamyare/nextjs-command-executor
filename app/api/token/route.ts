@@ -9,17 +9,18 @@ export async function POST(request: NextRequest) {
   if (contentType && contentType.includes('application/json')) {
     const body = await request.json();
     ({ grant_type: grantType, code, client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri } = body);
-    //debugLog de todo el body
-    await debugLog('info', 'Token request received body', body)
   } else {
     const body = await request.formData();
+    //debugLog de todo el body en un solo string
+    const bodyEntries = body.entries();
+    //debugLog de todo el body en un solo string
+    const bodyString = JSON.stringify(Object.fromEntries(bodyEntries));
+    await debugLog('info', 'Token request received entrue', { bodyString })
     grantType = body.get('grant_type')?.toString();
     code = body.get('code')?.toString();
     clientId = body.get('client_id')?.toString();
     clientSecret = body.get('client_secret')?.toString();
     redirectUri = body.get('redirect_uri')?.toString();
-    //debugLog de todo el body
-    await debugLog('info', 'Token request received body', body)
   }
 
   await debugLog('info', 'Token request received', {  grantType, code, clientId, redirectUri })
