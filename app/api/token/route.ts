@@ -6,41 +6,44 @@ export async function POST(request: NextRequest) {
 
   // Check content type and parse body accordingly
   const contentType = request.headers.get('content-type');
+  let bodyContent;
   if (contentType && contentType.includes('application/json')) {
-    const body = await request.json();
-    ({ grant_type: grantType, code, client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri } = body);
+    bodyContent = await request.json();
   } else {
-    const body = await request.formData();
-    //debugLog de todo el body en un solo string
-    const bodyEntries = body.entries();
-    //debugLog de todo el body en un solo string
-    const bodyString = JSON.stringify(Object.fromEntries(bodyEntries));
-    await debugLog('info', 'Token request received entrue', { bodyString })
-    grantType = body.get('grant_type')?.toString();
-    code = body.get('code')?.toString();
-    clientId = body.get('client_id')?.toString();
-    clientSecret = body.get('client_secret')?.toString();
-    redirectUri = body.get('redirect_uri')?.toString();
+    bodyContent = await request.formData();
   }
 
-  await debugLog('info', 'Token request received', {  grantType, code, clientId, redirectUri })
+  // Log the body content
+  await debugLog('info', 'Request body received', { bodyContent });
+
+  if (contentType && contentType.includes('application/json')) {
+    ({ grant_type: grantType, code, client_id: clientId, client_secret: clientSecret, redirect_uri: redirectUri } = bodyContent);
+  } else {
+    grantType = bodyContent.get('grant_type')?.toString();
+    code = bodyContent.get('code')?.toString();
+    clientId = bodyContent.get('client_id')?.toString();
+    clientSecret = bodyContent.get('client_secret')?.toString();
+    redirectUri = bodyContent.get('redirect_uri')?.toString();
+  }
+
+  await debugLog('info', 'Token request received', { grantType, code, clientId, redirectUri });
 
   if (grantType !== 'authorization_code') {
-    await debugLog('error', 'Unsupported grant type', { grantType })
-    return NextResponse.json({ error: 'unsupported_grant_type' }, { status: 400 })
+    await debugLog('error', 'Unsupported grant type', { grantType });
+    return NextResponse.json({ error: 'unsupported_grant_type' }, { status: 400 });
   }
 
   if (!code || !clientId || !clientSecret || !redirectUri) {
-    await debugLog('error', 'Missing required parameters', { code, clientId, redirectUri, clientSecret })
-    return NextResponse.json({ error: 'invalid_request' }, { status: 400 })
+    await debugLog('error', 'Missing required parameters', { code, clientId, redirectUri, clientSecret });
+    return NextResponse.json({ error: 'invalid_request' }, { status: 400 });
   }
 
   try {
-    const tokenResponse = await verifyAndExchangeAuthCode({ code, clientId, clientSecret, redirectUri })
-    await debugLog('info', 'Token exchange successful', { code })
-    return NextResponse.json(tokenResponse)
+    const tokenResponse = await verifyAndExchangeAuthCode({ code, clientId, clientSecret, redirectUri });
+    await debugLog('info', 'Token exchange successful', { code });
+    return NextResponse.json(tokenResponse);
   } catch (error) {
-    await debugLog('error', 'Failed to exchange auth code', { code, error: (error as Error).message })
-    return NextResponse.json({ error: 'invalid_grant' }, { status: 400 })
+    await debugLog('error', 'Failed to exchange auth code', { code, error: (error as Error).message });
+    return NextResponse.json({ error: 'invalid_grant' }, { status: 400 });
   }
 }
