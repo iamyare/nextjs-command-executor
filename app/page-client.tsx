@@ -19,12 +19,12 @@ export default function PageClient({user}:{user: User | null}) {
   useEffect(() => {
     if (user && authCode && redirectUri && alexaAuth) {
       // El usuario ha iniciado sesión y tenemos los parámetros de Alexa
-      linkAccountWithAlexa(authCode, redirectUri, user.id)
+      linkAccountWithAlexa({ authCode, redirectUri, state: searchParams.get('state')! })
     }
   }, [user, authCode, redirectUri, alexaAuth])
 
 
-  async function linkAccountWithAlexa(authCode: string, redirectUri: string, state: string) {
+  async function linkAccountWithAlexa({ authCode, redirectUri, state }: { authCode: string, redirectUri: string, state: string }) {
     try {
       await debugLog('info', 'Attempting to link account', { authCode, redirectUri, state })
       const response = await fetch('/api/link-account', {
@@ -86,7 +86,11 @@ export default function PageClient({user}:{user: User | null}) {
                         </p>
                       </div>
                       {alexaAuth ? (
-                        <Button className='glow rounded-2xl text-white' onClick={() => linkAccountWithAlexa(authCode!, redirectUri ?? '', user.id)}>
+                        <Button className='glow rounded-2xl text-white' onClick={() => linkAccountWithAlexa({
+                          authCode: authCode!,
+                          redirectUri: redirectUri!,
+                          state: searchParams.get('state')!
+                        })}>
                           Vincular con Alexa
                         </Button>
                       ) : (
