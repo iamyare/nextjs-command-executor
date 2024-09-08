@@ -4,20 +4,11 @@ import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { unstable_noStore as noStore } from 'next/cache'
 import { nanoid } from 'nanoid'
 
-export async function debugLog(level: 'info' | 'error', message: string, data?: any) {
-  const supabase = await createSupabaseServerClient()
-  await supabase.from('debug_logs').insert({
-    level,
-    message,
-    data: data ? JSON.stringify(data) : null
-  })
-}
 
-export async function createAuthCode(clientId: string, redirectUri: string, state: string) {
-  await debugLog('info', 'Creating auth code', { clientId, redirectUri, state })
+
+export async function createAuthCode({ clientId, redirectUri, state, scope }: { clientId: string, redirectUri: string, state: string, scope: string | null }) {
   
   if (clientId !== process.env.ALEXA_CLIENT_ID) {
-    await debugLog('error', 'Invalid client_id', { clientId, expectedClientId: process.env.ALEXA_CLIENT_ID })
     throw new Error('Invalid client_id')
   }
 
@@ -28,20 +19,20 @@ export async function createAuthCode(clientId: string, redirectUri: string, stat
     code: authCode,
     state: state,
     redirect_uri: redirectUri,
-    expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString()
+    expires_at: new Date(Date.now() + 10 * 60 * 1000).toISOString() // 10 minutes expiration
   })
 
   if (error) {
-    await debugLog('error', 'Failed to insert auth code', { error: error.message })
     throw new Error('Failed to create auth code')
   }
 
-  await debugLog('info', 'Auth code created successfully', { authCode, redirectUri })
   return authCode
 }
 
-export async function verifyAndExchangeAuthCode(code: string, clientId: string, clientSecret: string) {
-  if (clientId !== process.env.ALEXA_CLIENT_ID || clientSecret !== process.env.ALEXA_CLIENT_SECRET) {
+
+export async function verifyAndExchangeAuthCode({ code, clientId, redirectUri }: { code: string, clientId: string, redirectUri: string }) {
+
+  if (clientId !== process.env.ALEXA_CLIENT_ID ) {
     throw new Error('Invalid client credentials')
   }
 
@@ -52,32 +43,37 @@ export async function verifyAndExchangeAuthCode(code: string, clientId: string, 
     .eq('code', code)
     .single()
 
-  if (error || !authCode || new Date(authCode.expires_at) < new Date()) {
+  if (error || !authCode || new Date(authCode.expires_at) < new Date() || authCode.redirect_uri !== redirectUri) {
     throw new Error('Invalid authorization code')
   }
 
-  const accessToken = nanoid()
-  const refreshToken = nanoid()
+  const accessToken = nanoid(32)
+  const refreshToken = nanoid(32)
+  const expiresIn = 3600 // 1 hour
 
-  await supabase.from('user_tokens').insert({
+  const { error: insertError } = await supabase.from('user_tokens').insert({
     user_id: authCode.user_id,
     access_token: accessToken,
     refresh_token: refreshToken,
-    expires_at: new Date(Date.now() + 3600 * 1000).toISOString()
+    expires_at: new Date(Date.now() + expiresIn * 1000).toISOString()
   })
 
+  if (insertError) {
+    throw new Error('Failed to generate tokens')
+  }
+
   await supabase.from('auth_codes').delete().eq('code', code)
+
 
   return {
     access_token: accessToken,
     token_type: 'Bearer',
-    expires_in: 3600,
+    expires_in: expiresIn,
     refresh_token: refreshToken
   }
 }
 
-export async function linkAccount(authCode: string, userId: string, redirectUri: string) {
-  await debugLog('info', 'Linking account', { authCode, userId, redirectUri })
+export async function linkAccount({ authCode, userId, redirectUri }: { authCode: string, userId: string, redirectUri: string }) {
   
   const supabase = await createSupabaseServerClient()
   
@@ -88,21 +84,19 @@ export async function linkAccount(authCode: string, userId: string, redirectUri:
     .single()
 
   if (fetchError || !existingCode) {
-    await debugLog('error', 'Auth code not found', { authCode, error: fetchError?.message })
     throw new Error('Auth code not found')
   }
 
   const { error: updateError } = await supabase
     .from('auth_codes')
-    .update({ user_id: userId, redirect_uri: redirectUri })
+    .update({ user_id: userId })
     .eq('code', authCode)
 
   if (updateError) {
-    await debugLog('error', 'Failed to update auth code', { authCode, userId, redirectUri, error: updateError.message })
     throw new Error('Failed to link account')
   }
 
-  await debugLog('info', 'Account linked successfully', { authCode, userId, redirectUri })
+  return { code: authCode, redirect_uri: redirectUri, state: existingCode.state }
 }
 
 

@@ -1,5 +1,4 @@
 'use client'
-import { debugLog } from '@/actions'
 import { GoogleButton } from '@/components/oauth-buttons'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
@@ -12,39 +11,33 @@ export default function PageClient({user}:{user: User | null}) {
   const redirectUri = searchParams.get('redirect_uri')
   const alexaAuth = searchParams.get('alexa_auth')
 
-  
-
   useEffect(() => {
     if (user && authCode && redirectUri && alexaAuth) {
       // El usuario ha iniciado sesión y tenemos los parámetros de Alexa
-      linkAccountWithAlexa(authCode, user.id)
+      linkAccountWithAlexa({ authCode, redirectUri, state: searchParams.get('state')! })
     }
   }, [user, authCode, redirectUri, alexaAuth])
 
 
-  async function linkAccountWithAlexa(authCode: string, redirectUri: string) {
+  async function linkAccountWithAlexa({ authCode, redirectUri, state }: { authCode: string, redirectUri: string, state: string }) {
     try {
-      await debugLog('info', 'Attempting to link account', { authCode, redirectUri })
       const response = await fetch('/api/link-account', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ authCode, redirectUri })
+        body: JSON.stringify({ authCode, redirectUri, state })
       })
-
+  
       if (response.ok) {
         const data = await response.json()
         if (data.redirect) {
-          await debugLog('info', 'Redirecting after successful link', { redirect: data.redirect })
-          window.location.href = data.redirect
+          const finalRedirectUrl = `${data.redirect}&state=${encodeURIComponent(state)}`
+          window.location.href = finalRedirectUrl
         } else {
-          await debugLog('error', 'No redirect URL provided after linking')
         }
       } else {
         const errorText = await response.text()
-        await debugLog('error', 'Error linking account', { status: response.status, error: errorText })
       }
     } catch (error) {
-      await debugLog('error', 'Exception during account linking', { error: (error as Error).message  })
     }
   }
 
@@ -83,7 +76,11 @@ export default function PageClient({user}:{user: User | null}) {
                         </p>
                       </div>
                       {alexaAuth ? (
-                        <Button className='glow rounded-2xl text-white' onClick={() => linkAccountWithAlexa(authCode!, user.id)}>
+                        <Button className='glow rounded-2xl text-white' onClick={() => linkAccountWithAlexa({
+                          authCode: authCode!,
+                          redirectUri: redirectUri!,
+                          state: searchParams.get('state')!
+                        })}>
                           Vincular con Alexa
                         </Button>
                       ) : (
