@@ -1,92 +1,36 @@
-# Commands Executor - Aplicación Web
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Descripción
+## Getting Started
 
-Commands Executor es una potente interfaz web para gestionar y crear comandos de terminal personalizados. Esta aplicación sirve como el centro de control del sistema Commands Executor, permitiendo a los usuarios crear, leer, actualizar y eliminar comandos que pueden ser ejecutados en clientes de escritorio remotos.
+First, run the development server:
 
-## Características Principales
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-- **Operaciones CRUD:** Crear, leer, actualizar y eliminar comandos personalizados.
-- **Autenticación de Usuario:** Sistema de inicio de sesión seguro para gestionar el acceso.
-- **Generación de Comandos Asistida por IA:** Utiliza IA para ayudar en la creación de comandos complejos.
-- **Ejecución Remota:** Envía comandos a clientes de escritorio conectados para su ejecución.
-- **Historial de Comandos:** Mantiene un registro de los comandos ejecutados previamente.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Tecnologías Utilizadas
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-- **Framework:** Next.js
-- **Frontend:** React
-- **Estilos:** Tailwind CSS
-- **Base de Datos:** Supabase
-- **Integración de IA:** SDK de Vercel para IA, API de Gemini de Google
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Demos
+## Learn More
 
-https://github.com/user-attachments/assets/39b23d3f-3bc1-4cf9-9a66-ccfc90f56467
+To learn more about Next.js, take a look at the following resources:
 
-https://github.com/user-attachments/assets/e8beae5e-68c1-4870-b643-469ee4bfbad9
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-https://github.com/user-attachments/assets/2591e6f3-1a44-4e4f-a814-cf8fb599b4e1
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-https://github.com/user-attachments/assets/3e369c55-e760-4a62-a7b1-89ca0ee56811
+## Deploy on Vercel
 
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-
-
-## Instalación y Configuración
-
-1. Clonar el repositorio:
-
-   ```
-   git clone https://github.com/iamyare/nextjs-command-executor
-   cd nextjs-command-executor
-   ```
-
-2. Instalar dependencias:
-
-   ```
-   npm install
-   ```
-
-3. Configurar variables de entorno:
-
-   - Crea un archivo `.env.local` en el directorio raíz.
-   - Añade las siguientes variables:
-     ```
-     NEXT_PUBLIC_SUPABASE_URL=tu_url_de_supabase
-     NEXT_PUBLIC_SUPABASE_ANON_KEY=tu_clave_anonima_de_supabase
-     NEXT_PUBLIC_GEMINI_KEY=tu_clave_api_de_gemini
-     ```
-
-4. Ejecutar la aplicación:
-   ```
-   npm run dev
-   ```
-
-## Estado Actual y Limitaciones
-
-- La interfaz gráfica está en desarrollo y se presenta como un prototipo funcional.
-- Se están realizando mejoras continuas en rendimiento y accesibilidad.
-
-## Contribuciones
-
-Este proyecto es mantenido por [iamyare](https://github.com/iamyare). Las contribuciones son bienvenidas a través de pull requests.
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT. Ver el archivo [LICENSE](LICENSE) para más detalles.
-
-## Contacto
-
-- **GitHub:** [iamyare](https://github.com/iamyare)
-- **Instagram:** [i.am.yare](https://www.instagram.com/i.am.yare)
-
-## Demo
-
-Puedes ver una demostración del proyecto en: [https://command-executor.vercel.app](https://command-executor.vercel.app)
-
-## Planes Futuros
-
-- Mejorar la interfaz de usuario para una experiencia más intuitiva.
-- Implementar funciones avanzadas de búsqueda y filtrado de comandos.
-- Añadir soporte para la creación de flujos de trabajo con múltiples comandos.
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
