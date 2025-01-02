@@ -7,9 +7,9 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 
 const LINKS = [
-  { href: '/', label: 'Inicio' },
-  { href: '/terms', label: 'Términos de Servicio' },
-  { href: '/privacy', label: 'Política de Privacidad' }
+  { href: '/', label: 'Home' },
+  { href: '/terms', label: 'Terms of Service' },
+  { href: '/privacy', label: 'Privacy Policy' }
 ]
 
 export default function Privacy() {
@@ -34,66 +34,58 @@ export default function Privacy() {
           ))}
         </nav>
       </header>
-      <h1 className=' text-3xl font-bold text-center'>Políticas de Privacidad</h1>
-      <p className=' text-center text-muted-foreground text-sm'>Última actualización: Septiembre 09, 2024</p>
-      <h2 className=' text-xl font-semibold'>1. Introducción</h2>
+      <h1 className=' text-3xl font-bold text-center'>Privacy Policy</h1>
+      <p className=' text-center text-muted-foreground text-sm'>Last updated: September 09, 2024</p>
+      <h2 className=' text-xl font-semibold'>1. Introduction</h2>
       <p className='text-muted-foreground'>
-        Command Executor (&quot;nosotros&quot;, &quot;nuestro&quot; o &quot;la
-        aplicación&quot;) se compromete a proteger la privacidad de nuestros
-        usuarios (&quot;usted&quot; o &quot;su&quot;). Esta Política de
-        Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos su
-        información cuando utiliza nuestra aplicación y servicios relacionados.
+        Command Executor (&quot;we&quot;, &quot;our&quot; or &quot;the
+        application&quot;) is committed to protecting the privacy of our
+        users (&quot;you&quot; or &quot;your&quot;). This Privacy Policy explains how we collect, use, disclose, and protect your
+        information when you use our application and related services.
       </p>
-      <h2 className=' text-xl font-semibold'>2. Información que recopilamos</h2>
+      <h2 className=' text-xl font-semibold'>2. Information We Collect</h2>
       <ul className=' list-disc list-inside text-muted-foreground'>
         <li>
-          Información de la cuenta: nombre de usuario, dirección de correo
-          electrónico.
+          Account Information: username, email address.
         </li>
         <li>
-          Datos de uso: comandos creados, frecuencia de uso, preferencias de
-          automatización.
+          Usage Data: commands created, usage frequency, automation preferences.
         </li>
         <li>
-          Información del dispositivo: tipo de dispositivo, sistema operativo,
-          identificadores únicos.
+          Device Information: device type, operating system, unique identifiers.
         </li>
         <li>
-          Datos de ubicación (opcional): si usted lo permite, para funciones
-          basadas en la ubicación.
+          Location Data (optional): if you allow it, for location-based features.
         </li>
       </ul>
-      <h2 className=' text-xl font-semibold'>3. Cómo utilizamos su información</h2>
+      <h2 className=' text-xl font-semibold'>3. How We Use Your Information</h2>
       <ul className=' list-disc list-inside text-muted-foreground'>
-        <li>Para proporcionar y mantener nuestros servicios.</li>
-        <li>Para personalizar y mejorar su experiencia.</li>
-        <li>Para desarrollar nuevas características y funcionalidades.</li>
-        <li>Para comunicarnos con usted sobre actualizaciones o soporte.</li>
+        <li>To provide and maintain our services.</li>
+        <li>To personalize and enhance your experience.</li>
+        <li>To develop new features and functionalities.</li>
+        <li>To communicate with you about updates or support.</li>
       </ul>
-      <h2 className=' text-xl font-semibold'>4. Compartir información</h2>
-      <p className='text-muted-foreground'>No vendemos su información personal. Podemos compartir datos con:</p>
+      <h2 className=' text-xl font-semibold'>4. Sharing Information</h2>
+      <p className='text-muted-foreground'>We do not sell your personal information. We may share data with:</p>
       <ul className=' list-disc list-inside text-muted-foreground'>
-        <li>Proveedores de servicios que nos ayudan a operar la aplicación.</li>
-        <li>Autoridades legales cuando sea requerido por ley.</li>
+        <li>Service providers who help us operate the application.</li>
+        <li>Legal authorities when required by law.</li>
       </ul>
-      <h2 className=' text-xl font-semibold'>5. Seguridad de los datos</h2>
+      <h2 className=' text-xl font-semibold'>5. Data Security</h2>
       <p className='text-muted-foreground'>
-        Implementamos medidas de seguridad para proteger su información, pero
-        ningún sistema es 100% seguro.
+        We implement security measures to protect your information, but no system is 100% secure.
       </p>
-      <h2 className=' text-xl font-semibold'>6. Sus derechos</h2>
+      <h2 className=' text-xl font-semibold'>6. Your Rights</h2>
       <p className='text-muted-foreground'>
-        Usted tiene derecho a acceder, corregir o eliminar su información
-        personal.
+        You have the right to access, correct, or delete your personal information.
       </p>
-      <h2 className=' text-xl font-semibold'>7. Cambios a esta política</h2>
+      <h2 className=' text-xl font-semibold'>7. Changes to This Policy</h2>
       <p className='text-muted-foreground'>
-        Podemos actualizar esta política periódicamente. Le notificaremos sobre
-        cambios significativos.
+        We may update this policy periodically. We will notify you about significant changes.
       </p>
-      <h2 className=' text-xl font-semibold'>8. Contacto</h2>
+      <h2 className=' text-xl font-semibold'>8. Contact</h2>
       <p className='text-muted-foreground'>
-        Para preguntas sobre esta política, contacte a: iamyare@outlook.com
+        For questions about this policy, contact: iamyare@outlook.com
       </p>
     </main>
   )

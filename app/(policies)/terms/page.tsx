@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 const LINKS = [
-  { href: '/', label: 'Inicio' },
-  { href: '/terms', label: 'Términos de Servicio' },
-  { href: '/privacy', label: 'Política de Privacidad' }
+  { href: '/', label: 'Home' },
+  { href: '/terms', label: 'Terms of Service' },
+  { href: '/privacy', label: 'Privacy Policy' }
 ]
 
 export default function Terms() {
@@ -34,48 +34,48 @@ export default function Terms() {
         </nav>
       </header>
       <h1 className=' text-3xl font-bold text-center'>
-        Términos de Uso
+        Terms of Use
       </h1>
       <p className=' text-center text-muted-foreground text-sm'>
-        Fecha de entrada en vigor: [Insertar fecha]
+        Effective Date: September 09, 2024
       </p>
-      <h2 className=' text-xl font-semibold'>1. Aceptación de los términos</h2>
+      <h2 className=' text-xl font-semibold'>1. Acceptance of Terms</h2>
       <p className='text-muted-foreground'>
-        Al utilizar Command Executor, usted acepta estos Términos de Uso. Si no está de acuerdo, por favor no use la aplicación.
+        By using Command Executor, you agree to these Terms of Use. If you do not agree, please do not use the application.
       </p>
-      <h2 className=' text-xl font-semibold'>2. Uso de la aplicación</h2>
+      <h2 className=' text-xl font-semibold'>2. Use of the Application</h2>
       <ul className=' list-disc list-inside text-muted-foreground'>
-        <li>Usted debe tener al menos 13 años para usar Command Executor.</li>
-        <li>Usted es responsable de mantener la confidencialidad de su cuenta.</li>
-        <li>No debe usar la aplicación para actividades ilegales o no autorizadas.</li>
+        <li>You must be at least 13 years old to use Command Executor.</li>
+        <li>You are responsible for maintaining the confidentiality of your account.</li>
+        <li>You must not use the application for illegal or unauthorized activities.</li>
       </ul>
-      <h2 className=' text-xl font-semibold'>3. Propiedad intelectual</h2>
+      <h2 className=' text-xl font-semibold'>3. Intellectual Property</h2>
       <p className='text-muted-foreground'>
-        Command Executor y su contenido son propiedad de <strong>YARE</strong> y están protegidos por leyes de propiedad intelectual.
+        Command Executor and its content are owned by <strong>YARE</strong> and are protected by intellectual property laws.
       </p>
-      <h2 className=' text-xl font-semibold'>4. Contenido del usuario</h2>
+      <h2 className=' text-xl font-semibold'>4. User Content</h2>
       <p className='text-muted-foreground'>
-        Usted mantiene los derechos de cualquier contenido que cree, pero nos otorga una licencia para usarlo en relación con nuestros servicios.
+        You retain the rights to any content you create, but you grant us a license to use it in connection with our services.
       </p>
-      <h2 className=' text-xl font-semibold'>5. Limitación de responsabilidad</h2>
+      <h2 className=' text-xl font-semibold'>5. Limitation of Liability</h2>
       <p className='text-muted-foreground'>
-        Command Executor se proporciona &quot;tal cual&quot; y no garantizamos que esté libre de errores o interrupciones.
+        Command Executor is provided &quot;as is&quot; and we do not guarantee it will be free of errors or interruptions.
       </p>
-      <h2 className=' text-xl font-semibold'>6. Modificaciones del servicio</h2>
+      <h2 className=' text-xl font-semibold'>6. Service Modifications</h2>
       <p className='text-muted-foreground'>
-        Nos reservamos el derecho de modificar o discontinuar Command Executor en cualquier momento.
+        We reserve the right to modify or discontinue Command Executor at any time.
       </p>
-      <h2 className=' text-xl font-semibold'>7. Terminación</h2>
+      <h2 className=' text-xl font-semibold'>7. Termination</h2>
       <p className='text-muted-foreground'>
-        Podemos terminar o suspender su acceso a Command Executor por violaciones a estos términos.
+        We may terminate or suspend your access to Command Executor for violations of these terms.
       </p>
-      {/* <h2 className=' text-xl font-semibold'>8. Ley aplicable</h2>
+      {/* <h2 className=' text-xl font-semibold'>8. Governing Law</h2>
       <p className='text-muted-foreground'>
-        Estos términos se rigen por las leyes de [insertar jurisdicción].
+        These terms are governed by the laws of [insert jurisdiction].
       </p> */}
-      <h2 className=' text-xl font-semibold'>9. Contacto</h2>
+      <h2 className=' text-xl font-semibold'>9. Contact</h2>
       <p className='text-muted-foreground'>
-        Para preguntas sobre estos términos, contacte a: iamyare@outlook.com
+        For questions about these terms, contact: iamyare@outlook.com
       </p>
     </main>
   )
