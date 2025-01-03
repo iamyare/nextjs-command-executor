@@ -15,11 +15,11 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Separator } from '@/components/ui/separator'
-import { useEffect, useState, useTransition } from 'react'
-import { getUserSingle } from '@/actions'
+import { useTransition } from 'react'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
 import { toast } from '@/hooks/use-toast'
+import { useUserStore } from '@/store/user-store'
 
 const FormSchema = z.object({
   full_name: z.string().min(2, {
@@ -30,40 +30,21 @@ const FormSchema = z.object({
 })
 
 export default function AccountTabs({
-  userId,
   setOpen
 }: {
-  userId: string
   setOpen: (open: boolean) => void
 }) {
-  const [user, setUser] = useState<User | null>(null)
   const [isPending, startTransition] = useTransition()
-  const [isLoading, startLoading] = useTransition()
+  const { user, updateUser } = useUserStore()
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      full_name: '',
-      avatar_url: '',
-      email: ''
+      full_name: user.full_name,
+      avatar_url: user.avatar_url ?? '',
+      email: user.email
     }
   })
-
-  useEffect(() => {
-    startLoading(async () => {
-      const { user: userFetch, error } = await getUserSingle({ userId })
-      if (error) {
-        return console.log(error)
-      }
-      if (!userFetch) {
-        return console.log('No hay usuario')
-      }
-      setUser(userFetch)
-      form.setValue('full_name', userFetch.full_name)
-      form.setValue('avatar_url', userFetch.avatar_url ?? '')
-      form.setValue('email', userFetch.email)
-    })
-  }, [form, userId])
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     startTransition(async () => {
@@ -75,7 +56,7 @@ export default function AccountTabs({
           </pre>
         )
       })
-
+      updateUser(data)
       setOpen(false)
     })
   }
@@ -132,11 +113,7 @@ export default function AccountTabs({
               <FormItem>
                 <FormLabel>Nombre</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder='Nombre Completo'
-                    disabled={isLoading}
-                    {...field}
-                  />
+                  <Input placeholder='Nombre Completo' {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

@@ -21,16 +21,10 @@ import { Settings } from 'lucide-react'
 import TabsConf from './tabs-conf'
 import { useState } from 'react'
 
-  const title = 'Configuración'
-  const description = 'Configuración de la cuenta'
+const title = 'Configuración'
+const description = 'Configuración de la cuenta'
 
-export function ConfigModal({
-  userId,
-
-}: {
-  userId: string
-}) {
-
+export function ConfigModal() {
   const [open, setOpen] = useState(false)
   const isDesktop = useMediaQuery('(min-width: 600px)')
 
@@ -38,10 +32,7 @@ export function ConfigModal({
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button
-            variant={'ghost'}
-            size={'icon'}
-          >
+          <Button variant={'ghost'} size={'icon'}>
             <Settings className=' size-5' />
           </Button>
         </DialogTrigger>
@@ -50,7 +41,7 @@ export function ConfigModal({
             <DialogTitle>{title}</DialogTitle>
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
-          <TabsConf setOpen={setOpen} userId={userId} />
+          <TabsConf setOpen={setOpen} />
         </DialogContent>
       </Dialog>
     )
@@ -59,19 +50,16 @@ export function ConfigModal({
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-      <Button
-            variant={'ghost'}
-            size={'icon'}
-          >
-            <Settings className=' size-5' />
-          </Button>
+        <Button variant={'ghost'} size={'icon'}>
+          <Settings className=' size-5' />
+        </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className='text-left'>
           <DrawerTitle>{title}</DrawerTitle>
           <DrawerDescription>{description}</DrawerDescription>
         </DrawerHeader>
-        <TabsConf setOpen={setOpen} userId={userId} />
+        <TabsConf setOpen={setOpen} />
       </DrawerContent>
     </Drawer>
   )

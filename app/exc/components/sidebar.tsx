@@ -153,7 +153,7 @@ export default function Sidebar({
                   {/* Botones */}
                   <div className='flex flex-row items-center justify-end gap-2 '>
                     <ThemeToggle />
-                    <ConfigModal userId={user.id} />
+                    <ConfigModal />
 
                     {/* Profile dropdown */}
                     <Menu as='div' className='relative'>
