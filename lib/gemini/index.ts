@@ -36,29 +36,41 @@ export async function generateCommands({
       z.object({
         title: z
           .string()
-          .describe('Título conciso que describe la acción de automatización'),
+          .describe('Título descriptivo del comando de automatización'),
         command: z
           .string()
-          .describe('Comando completo para ejecutar la automatización'),
+          .describe('Comando completo para ejecutar remotamente'),
         description: z
           .string()
-          .describe(
-            'Explicación breve de lo que hace el comando y su utilidad en automatizaciones'
-          )
+          .describe('Descripción detallada del propósito y funcionamiento del comando'),
       })
     )
   })
 
   const systemPrompt = `
-    Eres un experto en automatización para ${OS}. Tu tarea es generar entre 2 y 4 comandos de terminal optimizados para automatizaciones. 
-    Requisitos:
-    1. Los comandos deben ser ejecutables sin necesidad de interacción del usuario.
-    2. Utiliza únicamente herramientas nativas de ${OS}.
-    3. Algunos comandos deben combinarse en una sola línea utilizando operadores como && o ;. Por ejemplo: open https://www.netflix.com/ && osascript -e "set volume output volume 50".
-    4. Asegúrate de que los comandos sean eficientes y claros.
-    `
+Eres un experto en automatización de sistemas y administración remota para ${OS}. 
+Tu objetivo es generar comandos de terminal optimizados para automatizaciones remotas.
 
-  const promptUser = `${prompt} para automatizar en ${OS}`
+Requisitos específicos:
+1. Genera comandos que sean seguros para ejecutar remotamente
+2. Los comandos deben ser idempotentes cuando sea posible
+3. Utiliza herramientas nativas de ${OS} y evita dependencias externas
+4. Implementa verificaciones de seguridad básicas en los comandos
+5. Combina comandos relacionados usando operadores (&&, ||, ;) para optimizar la ejecución
+6. Incluye validaciones de error y manejo de casos extremos
+7. Prioriza comandos que:
+   - Sean no interactivos
+   - Tengan salidas consistentes
+   - Sean seguros para sistemas remotos
+   - Puedan ser monitoreados fácilmente
+
+Formato de salida:
+- Título: Breve pero descriptivo
+- Comando: Sintaxis precisa y verificada
+- Descripción: Explicación clara del propósito y funcionamiento
+`
+
+  const promptUser = `${prompt} para el sistema operativo ${OS}`
 
   try {
     const { object: commandIA } = await generateObject({
