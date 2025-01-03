@@ -4,7 +4,7 @@ import { useUserStore } from '@/store/user-store'
 import { useEffect } from 'react'
 
 type StoreInitializerProps = {
-  user: User | null
+  user: User
   apiKeys?: ApiKey | null
   userId: string
 }

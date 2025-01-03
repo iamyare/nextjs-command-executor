@@ -1,4 +1,4 @@
-import { YAREDevFlat} from '@/components/Logo-YARE-dev'
+import { YAREDevFlat } from '@/components/Logo-YARE-dev'
 import Link from 'next/link'
 import React from 'react'
 

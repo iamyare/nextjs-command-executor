@@ -1,10 +1,8 @@
 'use client'
-
+import { AnimatePresence, motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Terminal } from 'lucide-react'
 import Link from 'next/link'
-
-import { MagicMotion } from 'react-magic-motion'
 
 export default function CommandRecent({
   lastCommands
@@ -12,9 +10,15 @@ export default function CommandRecent({
   lastCommands: (CommandHistory & { command: Command })[] | null
 }) {
   return (
-    <MagicMotion>
+    <AnimatePresence>
       {lastCommands ? (
-        <ul className='mt-2'>
+        <motion.ul
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className='mt-2'
+        >
           {lastCommands.map((item) => (
             <li key={item.id}>
               <Button
@@ -28,9 +32,14 @@ export default function CommandRecent({
               </Button>
             </li>
           ))}
-        </ul>
+        </motion.ul>
       ) : (
-        <p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+        >
           <Button
             variant={'ghost'}
             className='w-full justify-start text-muted-foreground hover:bg-transparent font-normal'
@@ -40,8 +49,8 @@ export default function CommandRecent({
               <span className='ml-2'>No hay comandos recientes</span>
             </Link>
           </Button>
-        </p>
+        </motion.p>
       )}
-    </MagicMotion>
+    </AnimatePresence>
   )
 }

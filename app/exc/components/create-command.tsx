@@ -1,7 +1,6 @@
 'use client'
 
-
-import FormCreateCommand from '@/components/form-create-command'
+import FormCreateCommand from '@/components/forms/form-create-command'
 import {
   Card,
   CardContent,
@@ -10,9 +9,7 @@ import {
   CardTitle
 } from '@/components/ui/card'
 
-
-export default function CreateCommand({userId}: {userId: string}) {
-
+export default function CreateCommand() {
   return (
     <Card className=' bg-background/20'>
       <CardHeader>
@@ -23,7 +20,7 @@ export default function CreateCommand({userId}: {userId: string}) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-      <FormCreateCommand userId={userId}/>
+        <FormCreateCommand />
       </CardContent>
     </Card>
   )
